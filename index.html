@@ -1,222 +1,860 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-    <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0,
-                   maximum-scale=1.0,
-                   user-scalable=no">
+<meta charset="UTF-8">
 
-    <meta name="theme-color" content="#19191a">
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
-    <title>VK Кликер</title>
+<meta name="theme-color" content="#111214">
 
-    <style>
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+<title>VK Кликер</title>
 
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            min-height: 100%;
-        }
+<!-- VK BRIDGE -->
+<script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 
-        body {
-            min-height: 100vh;
-            min-height: 100dvh;
+<style>
 
-            font-family: Arial, sans-serif;
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
-            background:
-                radial-gradient(
-                    circle at top,
-                    #292929 0%,
-                    #19191a 55%,
-                    #111112 100%
-                );
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
 
-            color: white;
+body {
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
 
-            overflow: hidden;
+    font-family: Arial, sans-serif;
 
-            user-select: none;
-            -webkit-user-select: none;
-        }
+    color: white;
 
-        .game {
-            width: 100%;
-            max-width: 500px;
-            min-height: 100vh;
-            min-height: 100dvh;
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            #343941 0%,
+            #191b1f 40%,
+            #0e0f11 100%
+        );
 
-            padding: 25px 20px;
+    user-select: none;
+    -webkit-user-select: none;
 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    overflow-x: hidden;
+}
 
-        h1 {
-            margin: 20px 0 5px;
+.game {
 
-            font-size: 32px;
-            font-weight: 700;
-        }
+    width: 100%;
+    max-width: 500px;
 
-        .subtitle {
-            font-size: 14px;
-            opacity: 0.55;
-            margin-bottom: 20px;
-        }
+    min-height: 100vh;
+    min-height: 100dvh;
 
-        .coins-box {
-            text-align: center;
-            margin: 10px 0 30px;
-        }
+    margin: auto;
 
-        .coins-label {
-            font-size: 14px;
-            opacity: 0.55;
-            margin-bottom: 5px;
-        }
+    padding: 20px 16px 30px;
+}
 
-        .coins {
-            font-size: 52px;
-            line-height: 1;
-            font-weight: bold;
+/* HEADER */
 
-            transition: transform 0.1s;
-        }
+.header {
+    text-align: center;
+    margin-bottom: 18px;
+}
 
-        .click-button {
-            width: 230px;
-            height: 230px;
+.title {
+    font-size: 30px;
+    font-weight: 800;
+    margin-top: 8px;
+}
 
-            border: none;
-            border-radius: 50%;
+.subtitle {
+    font-size: 13px;
+    opacity: .5;
+    margin-top: 5px;
+}
 
-            background: linear-gradient(
-                145deg,
-                #5b9bd5,
-                #315f91
-            );
+/* VK USER */
 
-            color: white;
+.user-card {
 
-            font-size: 30px;
-            font-weight: bold;
+    display: flex;
 
-            cursor: pointer;
+    align-items: center;
 
-            box-shadow:
-                0 15px 35px rgba(0, 0, 0, 0.45),
-                inset 0 3px 0 rgba(255,255,255,0.15);
+    gap: 12px;
 
-            transition:
-                transform 0.08s,
-                box-shadow 0.08s;
-        }
+    background:
+        rgba(255,255,255,.05);
 
-        .click-button:active {
-            transform: scale(0.91);
+    border:
+        1px solid
+        rgba(255,255,255,.07);
 
-            box-shadow:
-                0 5px 15px rgba(0, 0, 0, 0.4),
-                inset 0 3px 0 rgba(255,255,255,0.1);
-        }
+    border-radius: 16px;
 
-        .reset {
-            margin-top: 35px;
+    padding: 10px 12px;
 
-            padding: 12px 25px;
+    margin-bottom: 12px;
+}
 
-            border: none;
-            border-radius: 10px;
+.user-avatar {
 
-            background: #303033;
-            color: white;
+    width: 42px;
+    height: 42px;
 
-            font-size: 14px;
+    border-radius: 50%;
 
-            cursor: pointer;
+    object-fit: cover;
 
-            transition: background 0.15s;
-        }
+    background: #292c31;
+}
 
-        .reset:active {
-            background: #444447;
-        }
+.user-info {
+    flex: 1;
+}
 
-        .status {
-            margin-top: auto;
+.user-name {
+    font-size: 14px;
+    font-weight: bold;
+}
 
-            padding-top: 20px;
+.user-id {
+    font-size: 10px;
+    opacity: .4;
+    margin-top: 3px;
+}
 
-            font-size: 13px;
+.vk-status {
 
-            opacity: 0.55;
+    font-size: 11px;
 
-            text-align: center;
-        }
+    color: #62b0ff;
 
-        .pop {
-            animation: pop 0.15s ease;
-        }
+    white-space: nowrap;
+}
 
-        @keyframes pop {
+/* PLAYER */
 
-            0% {
-                transform: scale(1);
-            }
+.player-card {
 
-            50% {
-                transform: scale(1.18);
-            }
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.08),
+            rgba(255,255,255,.025)
+        );
 
-            100% {
-                transform: scale(1);
-            }
+    border:
+        1px solid
+        rgba(255,255,255,.08);
 
-        }
+    border-radius: 20px;
 
-        @media (max-width: 360px) {
+    padding: 16px;
 
-            .click-button {
-                width: 190px;
-                height: 190px;
-            }
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.25);
 
-            .coins {
-                font-size: 44px;
-            }
+    margin-bottom: 16px;
+}
 
-            h1 {
-                font-size: 28px;
-            }
+.player-top {
 
-        }
-    </style>
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.level {
+
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.rank {
+
+    padding: 6px 10px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,193,7,.12);
+
+    color: #ffd54a;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+.xp-text {
+
+    font-size: 12px;
+
+    opacity: .55;
+
+    margin-top: 12px;
+
+    display: flex;
+
+    justify-content: space-between;
+}
+
+.xp-bar {
+
+    width: 100%;
+
+    height: 8px;
+
+    background: #292c31;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    margin-top: 7px;
+}
+
+.xp-fill {
+
+    height: 100%;
+
+    width: 0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #4da3ff,
+            #7b61ff
+        );
+
+    border-radius: 10px;
+
+    transition: width .25s;
+}
+
+/* COINS */
+
+.coins-box {
+
+    text-align: center;
+
+    margin: 22px 0 20px;
+}
+
+.coins-label {
+
+    font-size: 12px;
+
+    letter-spacing: 2px;
+
+    opacity: .45;
+}
+
+.coins {
+
+    font-size: 52px;
+
+    font-weight: 800;
+
+    margin-top: 5px;
+
+    line-height: 1;
+
+    text-shadow:
+        0 5px 20px
+        rgba(255,193,7,.15);
+
+    transition:
+        transform .1s;
+}
+
+/* CLICK */
+
+.click-area {
+
+    display: flex;
+
+    justify-content: center;
+
+    position: relative;
+
+    margin: 10px 0 25px;
+}
+
+.click-button {
+
+    width: 220px;
+    height: 220px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+
+        radial-gradient(
+            circle at 35% 25%,
+            #77c3ff,
+            #438ed1 45%,
+            #24598c 100%
+        );
+
+    color: white;
+
+    font-size: 27px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+
+        0 20px 45px rgba(0,0,0,.45),
+
+        inset 0 5px 0
+        rgba(255,255,255,.18),
+
+        inset 0 -8px 20px
+        rgba(0,0,0,.2);
+
+    transition:
+        transform .08s,
+        filter .1s;
+}
+
+.click-button:active {
+
+    transform: scale(.91);
+
+    filter: brightness(.9);
+}
+
+.click-info {
+
+    position: absolute;
+
+    bottom: -18px;
+
+    font-size: 13px;
+
+    opacity: .55;
+}
+
+/* STATS */
+
+.stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+
+    margin-bottom: 18px;
+}
+
+.stat {
+
+    background:
+        rgba(255,255,255,.05);
+
+    border:
+        1px solid
+        rgba(255,255,255,.06);
+
+    border-radius: 14px;
+
+    padding: 12px 5px;
+
+    text-align: center;
+}
+
+.stat-value {
+
+    font-size: 17px;
+
+    font-weight: bold;
+}
+
+.stat-label {
+
+    font-size: 10px;
+
+    opacity: .45;
+
+    margin-top: 4px;
+}
+
+/* TABS */
+
+.tabs {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+}
+
+.tab {
+
+    border: none;
+
+    padding: 12px;
+
+    border-radius: 13px;
+
+    background: #22252a;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.tab.active {
+
+    background: #438ed1;
+}
+
+/* PANELS */
+
+.panel {
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.025)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius: 18px;
+
+    padding: 14px;
+
+    margin-bottom: 15px;
+}
+
+.panel-title {
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    margin-bottom: 12px;
+}
+
+/* SHOP */
+
+.upgrade {
+
+    background: #1d2024;
+
+    border-radius: 15px;
+
+    padding: 13px;
+
+    margin-bottom: 9px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.05);
+}
+
+.upgrade-top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.upgrade-name {
+
+    font-weight: bold;
+
+    font-size: 15px;
+}
+
+.upgrade-level {
+
+    font-size: 11px;
+
+    opacity: .5;
+
+    margin-top: 3px;
+}
+
+.upgrade-description {
+
+    font-size: 12px;
+
+    opacity: .55;
+
+    margin: 8px 0;
+}
+
+.buy {
+
+    width: 100%;
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 10px;
+
+    background: #438ed1;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.buy:disabled {
+
+    background: #303338;
+
+    color: #777;
+
+    cursor: default;
+}
+
+/* RATING */
+
+.rating {
+
+    text-align: center;
+
+    padding: 10px;
+}
+
+.rating-number {
+
+    font-size: 42px;
+
+    font-weight: 800;
+
+    color: #ffd54a;
+}
+
+.rating-label {
+
+    font-size: 12px;
+
+    opacity: .5;
+}
+
+.rank-list {
+
+    margin-top: 15px;
+}
+
+.rank-item {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 11px;
+
+    background: #1d2024;
+
+    border-radius: 11px;
+
+    margin-bottom: 6px;
+
+    font-size: 13px;
+}
+
+.rank-item.current {
+
+    border:
+        1px solid #438ed1;
+
+    background:
+        rgba(67,142,209,.12);
+}
+
+/* RESET */
+
+.reset {
+
+    width: 100%;
+
+    border: none;
+
+    border-radius: 12px;
+
+    padding: 13px;
+
+    background: #292c31;
+
+    color: #aaa;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    margin-top: 5px;
+}
+
+/* STATUS */
+
+.status {
+
+    text-align: center;
+
+    font-size: 11px;
+
+    opacity: .35;
+
+    margin-top: 15px;
+}
+
+/* POPUP */
+
+.coin-popup {
+
+    position: fixed;
+
+    pointer-events: none;
+
+    font-size: 22px;
+
+    font-weight: bold;
+
+    color: #ffd54a;
+
+    animation:
+        floatUp .8s ease forwards;
+
+    z-index: 999;
+}
+
+@keyframes floatUp {
+
+    0% {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+    100% {
+
+        opacity: 0;
+
+        transform:
+            translateY(-70px)
+            scale(1.25);
+    }
+}
+
+.pop {
+
+    animation:
+        pop .15s ease;
+}
+
+@keyframes pop {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+@media (max-width: 360px) {
+
+    .click-button {
+
+        width: 185px;
+        height: 185px;
+
+        font-size: 23px;
+    }
+
+    .coins {
+        font-size: 43px;
+    }
+
+    .title {
+        font-size: 26px;
+    }
+}
+
+</style>
+
 </head>
 
 <body>
 
 <div class="game">
 
-    <h1>💰 Кликер</h1>
 
-    <div class="subtitle">
-        Зарабатывай монеты кликами
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="title">
+            💰 Кликер
+        </div>
+
+        <div class="subtitle">
+            Развивайся • Покупай улучшения • Поднимай рейтинг
+        </div>
+
     </div>
+
+
+    <!-- VK USER -->
+
+    <div class="user-card">
+
+        <img
+            id="userAvatar"
+            class="user-avatar"
+            src=""
+            alt="VK">
+
+        <div class="user-info">
+
+            <div
+                id="userName"
+                class="user-name">
+
+                Игрок
+
+            </div>
+
+            <div
+                id="userId"
+                class="user-id">
+
+                VK ID: загрузка...
+
+            </div>
+
+        </div>
+
+        <div
+            id="vkStatus"
+            class="vk-status">
+
+            Подключение...
+
+        </div>
+
+    </div>
+
+
+    <!-- PLAYER -->
+
+    <div class="player-card">
+
+        <div class="player-top">
+
+            <div class="level">
+
+                Уровень
+                <span id="level">
+                    1
+                </span>
+
+            </div>
+
+            <div
+                id="rank"
+                class="rank">
+
+                Новичок
+
+            </div>
+
+        </div>
+
+        <div class="xp-text">
+
+            <span>
+                Опыт
+            </span>
+
+            <span>
+
+                <span id="xp">
+                    0
+                </span>
+
+                /
+
+                <span id="xpNeed">
+                    100
+                </span>
+
+            </span>
+
+        </div>
+
+        <div class="xp-bar">
+
+            <div
+                id="xpFill"
+                class="xp-fill">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- COINS -->
 
     <div class="coins-box">
 
@@ -224,234 +862,1384 @@
             МОНЕТЫ
         </div>
 
-        <div id="counter" class="coins">
+        <div
+            id="counter"
+            class="coins">
+
             0
+
         </div>
 
     </div>
 
-    <button
-        id="clickBtn"
-        class="click-button">
-        КЛИК
-    </button>
+
+    <!-- CLICK -->
+
+    <div class="click-area">
+
+        <button
+            id="clickBtn"
+            class="click-button">
+
+            КЛИК
+
+        </button>
+
+        <div class="click-info">
+
+            +<span id="clickPowerText">
+                1
+            </span>
+
+            монет за клик
+
+        </div>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div
+                id="perSecond"
+                class="stat-value">
+
+                0
+
+            </div>
+
+            <div class="stat-label">
+                В СЕКУНДУ
+            </div>
+
+        </div>
+
+        <div class="stat">
+
+            <div
+                id="criticalChance"
+                class="stat-value">
+
+                5%
+
+            </div>
+
+            <div class="stat-label">
+                КРИТ
+            </div>
+
+        </div>
+
+        <div class="stat">
+
+            <div
+                id="totalClicks"
+                class="stat-value">
+
+                0
+
+            </div>
+
+            <div class="stat-label">
+                КЛИКОВ
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABS -->
+
+    <div class="tabs">
+
+        <button
+            id="shopTab"
+            class="tab active">
+
+            🛒 Магазин
+
+        </button>
+
+        <button
+            id="ratingTab"
+            class="tab">
+
+            🏆 Рейтинг
+
+        </button>
+
+    </div>
+
+
+    <!-- SHOP -->
+
+    <div
+        id="shopPanel"
+        class="panel">
+
+        <div class="panel-title">
+
+            🛒 Улучшения
+
+        </div>
+
+
+        <!-- CLICK POWER -->
+
+        <div class="upgrade">
+
+            <div class="upgrade-top">
+
+                <div>
+
+                    <div class="upgrade-name">
+                        👆 Сила клика
+                    </div>
+
+                    <div class="upgrade-level">
+
+                        Уровень
+
+                        <span id="clickUpgradeLevel">
+                            0
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="upgrade-description">
+
+                Увеличивает количество монет
+                за один клик.
+
+            </div>
+
+            <button
+                id="buyClickUpgrade"
+                class="buy">
+
+                Купить за
+
+                <span id="clickUpgradeCost">
+                    25
+                </span>
+
+                💰
+
+            </button>
+
+        </div>
+
+
+        <!-- AUTO -->
+
+        <div class="upgrade">
+
+            <div class="upgrade-top">
+
+                <div>
+
+                    <div class="upgrade-name">
+                        🤖 Автокликер
+                    </div>
+
+                    <div class="upgrade-level">
+
+                        Уровень
+
+                        <span id="autoUpgradeLevel">
+                            0
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="upgrade-description">
+
+                Автоматически приносит монеты
+                каждую секунду.
+
+            </div>
+
+            <button
+                id="buyAutoUpgrade"
+                class="buy">
+
+                Купить за
+
+                <span id="autoUpgradeCost">
+                    100
+                </span>
+
+                💰
+
+            </button>
+
+        </div>
+
+
+        <!-- CRIT -->
+
+        <div class="upgrade">
+
+            <div class="upgrade-top">
+
+                <div>
+
+                    <div class="upgrade-name">
+                        💥 Критический клик
+                    </div>
+
+                    <div class="upgrade-level">
+
+                        Уровень
+
+                        <span id="critUpgradeLevel">
+                            0
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="upgrade-description">
+
+                Иногда клик приносит x3 монет.
+
+            </div>
+
+            <button
+                id="buyCritUpgrade"
+                class="buy">
+
+                Купить за
+
+                <span id="critUpgradeCost">
+                    250
+                </span>
+
+                💰
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- RATING -->
+
+    <div
+        id="ratingPanel"
+        class="panel hidden">
+
+        <div class="panel-title">
+
+            🏆 Твой рейтинг
+
+        </div>
+
+        <div class="rating">
+
+            <div
+                id="ratingNumber"
+                class="rating-number">
+
+                0
+
+            </div>
+
+            <div class="rating-label">
+                РЕЙТИНГ
+            </div>
+
+        </div>
+
+        <div class="rank-list">
+
+            <div class="rank-item">
+
+                <span>
+                    🥇 Легенда
+                </span>
+
+                <span>
+                    10 000+
+                </span>
+
+            </div>
+
+            <div class="rank-item">
+
+                <span>
+                    🥈 Мастер
+                </span>
+
+                <span>
+                    5 000+
+                </span>
+
+            </div>
+
+            <div class="rank-item">
+
+                <span>
+                    🥉 Профи
+                </span>
+
+                <span>
+                    2 000+
+                </span>
+
+            </div>
+
+            <div class="rank-item">
+
+                <span>
+                    ⚡ Кликер
+                </span>
+
+                <span>
+                    500+
+                </span>
+
+            </div>
+
+            <div
+                class="rank-item current">
+
+                <span>
+                    👤 Ты
+                </span>
+
+                <span id="ratingRank">
+                    Новичок
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESET -->
 
     <button
         id="resetBtn"
         class="reset">
-        Сбросить прогресс
+
+        🔄 Сбросить локальный прогресс
+
     </button>
+
 
     <div
         id="status"
         class="status">
-        Подключение к VK...
+
+        Запуск игры...
+
     </div>
 
 </div>
 
 
-<!-- ================================= -->
-<!-- VK BRIDGE                          -->
-<!-- ================================= -->
-
-<script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
-
-
 <script>
 
-document.addEventListener(
-    "DOMContentLoaded",
-    async function () {
+/* =========================================
+   GAME DATA
+========================================= */
 
-        /* =================================
-           ЭЛЕМЕНТЫ
-        ================================= */
+let game =
+    JSON.parse(
+        localStorage.getItem(
+            "vkClicker"
+        )
+    ) || {
 
-        const counterEl =
-            document.getElementById("counter");
+        coins: 0,
 
-        const clickBtn =
-            document.getElementById("clickBtn");
+        xp: 0,
 
-        const resetBtn =
-            document.getElementById("resetBtn");
+        level: 1,
 
-        const statusEl =
-            document.getElementById("status");
+        totalClicks: 0,
 
+        clickPower: 1,
 
-        /* =================================
-           VK MINI APP
-        ================================= */
+        autoLevel: 0,
 
-        try {
+        clickUpgradeLevel: 0,
 
-            await vkBridge.send(
-                "VKWebAppInit"
-            );
+        critUpgradeLevel: 0
 
-            statusEl.textContent =
-                "✅ VK Mini App запущен";
-
-            console.log(
-                "VK Bridge подключён"
-            );
-
-        } catch (error) {
-
-            statusEl.textContent =
-                "⚠️ Тестовый режим";
-
-            console.log(
-                "VK Bridge:",
-                error
-            );
-
-        }
+    };
 
 
-        /* =================================
-           СЧЁТЧИК
-        ================================= */
+/* =========================================
+   VK DATA
+========================================= */
 
-        let count = 0;
-
-
-        /* =================================
-           ЗАГРУЗКА СОХРАНЕНИЯ
-        ================================= */
-
-        try {
-
-            const saved =
-                localStorage.getItem(
-                    "clicker_count"
-                );
-
-            if (saved !== null) {
-
-                count =
-                    parseInt(
-                        saved,
-                        10
-                    ) || 0;
-
-            }
-
-        } catch (error) {
-
-            console.log(
-                "Ошибка загрузки:",
-                error
-            );
-
-        }
+let vkUser = null;
 
 
-        counterEl.textContent =
-            count;
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const counter =
+    document.getElementById(
+        "counter"
+    );
+
+const levelElement =
+    document.getElementById(
+        "level"
+    );
+
+const xpElement =
+    document.getElementById(
+        "xp"
+    );
+
+const xpNeedElement =
+    document.getElementById(
+        "xpNeed"
+    );
+
+const xpFill =
+    document.getElementById(
+        "xpFill"
+    );
+
+const rankElement =
+    document.getElementById(
+        "rank"
+    );
+
+const clickPowerText =
+    document.getElementById(
+        "clickPowerText"
+    );
+
+const perSecond =
+    document.getElementById(
+        "perSecond"
+    );
+
+const criticalChance =
+    document.getElementById(
+        "criticalChance"
+    );
+
+const totalClicks =
+    document.getElementById(
+        "totalClicks"
+    );
 
 
-        /* =================================
-           СОХРАНЕНИЕ
-        ================================= */
+/* =========================================
+   XP
+========================================= */
 
-        function saveGame() {
+function getXpNeed() {
 
-            try {
+    return Math.floor(
+        100 *
+        Math.pow(
+            1.35,
+            game.level - 1
+        )
+    );
 
-                localStorage.setItem(
-                    "clicker_count",
-                    count
-                );
-
-            } catch (error) {
-
-                console.log(
-                    "Ошибка сохранения:",
-                    error
-                );
-
-            }
-
-        }
+}
 
 
-        /* =================================
-           ОБНОВЛЕНИЕ СЧЁТЧИКА
-        ================================= */
+/* =========================================
+   RATING
+========================================= */
 
-        function updateCounter() {
+function getRating() {
 
-            counterEl.textContent =
-                count;
+    return Math.floor(
 
-            counterEl.classList.remove(
-                "pop"
-            );
+        game.level * 100 +
 
-            /*
-             * Перезапускаем CSS-анимацию
-             */
-            void counterEl.offsetWidth;
+        game.totalClicks * 2 +
 
-            counterEl.classList.add(
-                "pop"
-            );
+        game.clickUpgradeLevel * 150 +
 
-        }
+        game.autoLevel * 200 +
+
+        game.critUpgradeLevel * 300
+
+    );
+
+}
 
 
-        /* =================================
-           КЛИК
-        ================================= */
+/* =========================================
+   RANK
+========================================= */
 
-        clickBtn.addEventListener(
-            "click",
-            function () {
+function getRank() {
 
-                count++;
+    const rating =
+        getRating();
 
-                updateCounter();
+    if (rating >= 10000)
+        return "Легенда";
 
-                saveGame();
+    if (rating >= 5000)
+        return "Мастер";
 
-            }
+    if (rating >= 2000)
+        return "Профи";
+
+    if (rating >= 500)
+        return "Кликер";
+
+    return "Новичок";
+}
+
+
+/* =========================================
+   FORMAT
+========================================= */
+
+function formatNumber(number) {
+
+    if (number >= 1000000000) {
+
+        return (
+            number / 1000000000
+        ).toFixed(1) + "B";
+
+    }
+
+    if (number >= 1000000) {
+
+        return (
+            number / 1000000
+        ).toFixed(1) + "M";
+
+    }
+
+    if (number >= 1000) {
+
+        return (
+            number / 1000
+        ).toFixed(1) + "K";
+
+    }
+
+    return Math.floor(number);
+}
+
+
+/* =========================================
+   COSTS
+========================================= */
+
+function clickUpgradeCost() {
+
+    return Math.floor(
+        25 *
+        Math.pow(
+            1.55,
+            game.clickUpgradeLevel
+        )
+    );
+
+}
+
+function autoUpgradeCost() {
+
+    return Math.floor(
+        100 *
+        Math.pow(
+            1.7,
+            game.autoLevel
+        )
+    );
+
+}
+
+function critUpgradeCost() {
+
+    return Math.floor(
+        250 *
+        Math.pow(
+            1.8,
+            game.critUpgradeLevel
+        )
+    );
+
+}
+
+
+/* =========================================
+   CRIT
+========================================= */
+
+function getCritChance() {
+
+    return Math.min(
+        50,
+        5 +
+        game.critUpgradeLevel * 5
+    );
+
+}
+
+
+/* =========================================
+   SAVE
+========================================= */
+
+function saveGame() {
+
+    localStorage.setItem(
+        "vkClicker",
+        JSON.stringify(game)
+    );
+
+}
+
+
+/* =========================================
+   UPDATE UI
+========================================= */
+
+function updateUI() {
+
+    counter.textContent =
+        formatNumber(
+            game.coins
+        );
+
+    levelElement.textContent =
+        game.level;
+
+    xpElement.textContent =
+        Math.floor(
+            game.xp
+        );
+
+    const xpNeed =
+        getXpNeed();
+
+    xpNeedElement.textContent =
+        xpNeed;
+
+    xpFill.style.width =
+        Math.min(
+            100,
+            game.xp / xpNeed * 100
+        ) + "%";
+
+
+    clickPowerText.textContent =
+        game.clickPower;
+
+    perSecond.textContent =
+        game.autoLevel;
+
+    criticalChance.textContent =
+        getCritChance() + "%";
+
+    totalClicks.textContent =
+        formatNumber(
+            game.totalClicks
         );
 
 
-        /* =================================
-           СБРОС
-        ================================= */
+    const rank =
+        getRank();
 
-        resetBtn.addEventListener(
-            "click",
-            function () {
+    rankElement.textContent =
+        rank;
 
-                const confirmed =
-                    confirm(
-                        "Точно сбросить весь прогресс?"
-                    );
-
-                if (!confirmed) {
-                    return;
-                }
-
-                count = 0;
-
-                updateCounter();
-
-                saveGame();
-
-            }
+    document.getElementById(
+        "ratingNumber"
+    ).textContent =
+        formatNumber(
+            getRating()
         );
 
+    document.getElementById(
+        "ratingRank"
+    ).textContent =
+        rank;
+
+
+    document.getElementById(
+        "clickUpgradeLevel"
+    ).textContent =
+        game.clickUpgradeLevel;
+
+    document.getElementById(
+        "autoUpgradeLevel"
+    ).textContent =
+        game.autoLevel;
+
+    document.getElementById(
+        "critUpgradeLevel"
+    ).textContent =
+        game.critUpgradeLevel;
+
+
+    const clickCost =
+        clickUpgradeCost();
+
+    const autoCost =
+        autoUpgradeCost();
+
+    const critCost =
+        critUpgradeCost();
+
+
+    document.getElementById(
+        "clickUpgradeCost"
+    ).textContent =
+        formatNumber(
+            clickCost
+        );
+
+    document.getElementById(
+        "autoUpgradeCost"
+    ).textContent =
+        formatNumber(
+            autoCost
+        );
+
+    document.getElementById(
+        "critUpgradeCost"
+    ).textContent =
+        formatNumber(
+            critCost
+        );
+
+
+    document.getElementById(
+        "buyClickUpgrade"
+    ).disabled =
+        game.coins < clickCost;
+
+
+    document.getElementById(
+        "buyAutoUpgrade"
+    ).disabled =
+        game.coins < autoCost;
+
+
+    document.getElementById(
+        "buyCritUpgrade"
+    ).disabled =
+        game.coins < critCost;
+
+
+    saveGame();
+
+}
+
+
+/* =========================================
+   ADD XP
+========================================= */
+
+function addXP(amount) {
+
+    game.xp += amount;
+
+    let levelUp = false;
+
+
+    while (
+        game.xp >= getXpNeed()
+    ) {
+
+        game.xp -=
+            getXpNeed();
+
+        game.level++;
+
+        levelUp = true;
+
+    }
+
+
+    if (levelUp) {
+
+        const bonus =
+            game.level * 25;
+
+        game.coins +=
+            bonus;
+
+        showStatus(
+            "🎉 Новый уровень! +" +
+            bonus +
+            " 💰"
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   CLICK
+========================================= */
+
+document
+.getElementById(
+    "clickBtn"
+)
+.addEventListener(
+    "click",
+    function(event) {
+
+        let amount =
+            game.clickPower;
+
+
+        const critical =
+            Math.random() * 100 <
+            getCritChance();
+
+
+        if (critical) {
+
+            amount *= 3;
+
+        }
+
+
+        game.coins +=
+            amount;
+
+        game.totalClicks++;
+
+
+        addXP(
+            2 +
+            game.clickUpgradeLevel
+        );
+
+
+        counter.classList.remove(
+            "pop"
+        );
+
+        void counter.offsetWidth;
+
+        counter.classList.add(
+            "pop"
+        );
+
+
+        createPopup(
+            event.clientX,
+            event.clientY,
+            critical
+                ? "💥 +" + amount
+                : "+" + amount
+        );
+
+
+        updateUI();
 
     }
 );
 
+
+/* =========================================
+   POPUP
+========================================= */
+
+function createPopup(
+    x,
+    y,
+    text
+) {
+
+    const popup =
+        document.createElement(
+            "div"
+        );
+
+    popup.className =
+        "coin-popup";
+
+    popup.textContent =
+        text;
+
+    popup.style.left =
+        x + "px";
+
+    popup.style.top =
+        y + "px";
+
+
+    document.body.appendChild(
+        popup
+    );
+
+
+    setTimeout(
+        function() {
+
+            popup.remove();
+
+        },
+        800
+    );
+
+}
+
+
+/* =========================================
+   BUY CLICK UPGRADE
+========================================= */
+
+document
+.getElementById(
+    "buyClickUpgrade"
+)
+.addEventListener(
+    "click",
+    function() {
+
+        const cost =
+            clickUpgradeCost();
+
+
+        if (
+            game.coins < cost
+        ) return;
+
+
+        game.coins -=
+            cost;
+
+        game.clickUpgradeLevel++;
+
+        game.clickPower++;
+
+
+        showStatus(
+            "👆 Сила клика улучшена!"
+        );
+
+
+        updateUI();
+
+    }
+);
+
+
+/* =========================================
+   BUY AUTO
+========================================= */
+
+document
+.getElementById(
+    "buyAutoUpgrade"
+)
+.addEventListener(
+    "click",
+    function() {
+
+        const cost =
+            autoUpgradeCost();
+
+
+        if (
+            game.coins < cost
+        ) return;
+
+
+        game.coins -=
+            cost;
+
+        game.autoLevel++;
+
+
+        showStatus(
+            "🤖 Автокликер улучшен!"
+        );
+
+
+        updateUI();
+
+    }
+);
+
+
+/* =========================================
+   BUY CRIT
+========================================= */
+
+document
+.getElementById(
+    "buyCritUpgrade"
+)
+.addEventListener(
+    "click",
+    function() {
+
+        const cost =
+            critUpgradeCost();
+
+
+        if (
+            game.coins < cost
+        ) return;
+
+
+        game.coins -=
+            cost;
+
+        game.critUpgradeLevel++;
+
+
+        showStatus(
+            "💥 Критический шанс увеличен!"
+        );
+
+
+        updateUI();
+
+    }
+);
+
+
+/* =========================================
+   AUTO CLICKER
+========================================= */
+
+setInterval(
+    function() {
+
+        if (
+            game.autoLevel > 0
+        ) {
+
+            game.coins +=
+                game.autoLevel;
+
+            addXP(
+                game.autoLevel
+            );
+
+            updateUI();
+
+        }
+
+    },
+    1000
+);
+
+
+/* =========================================
+   TABS
+========================================= */
+
+const shopTab =
+    document.getElementById(
+        "shopTab"
+    );
+
+const ratingTab =
+    document.getElementById(
+        "ratingTab"
+    );
+
+const shopPanel =
+    document.getElementById(
+        "shopPanel"
+    );
+
+const ratingPanel =
+    document.getElementById(
+        "ratingPanel"
+    );
+
+
+shopTab.addEventListener(
+    "click",
+    function() {
+
+        shopTab.classList.add(
+            "active"
+        );
+
+        ratingTab.classList.remove(
+            "active"
+        );
+
+        shopPanel.classList.remove(
+            "hidden"
+        );
+
+        ratingPanel.classList.add(
+            "hidden"
+        );
+
+    }
+);
+
+
+ratingTab.addEventListener(
+    "click",
+    function() {
+
+        ratingTab.classList.add(
+            "active"
+        );
+
+        shopTab.classList.remove(
+            "active"
+        );
+
+        ratingPanel.classList.remove(
+            "hidden"
+        );
+
+        shopPanel.classList.add(
+            "hidden"
+        );
+
+    }
+);
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+function showStatus(text) {
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        text;
+
+}
+
+
+/* =========================================
+   VK BRIDGE
+========================================= */
+
+async function initVKBridge() {
+
+    try {
+
+        showStatus(
+            "🔵 Подключение к VK..."
+        );
+
+
+        /*
+         * Инициализируем VK Bridge
+         */
+
+        await vkBridge.send(
+            "VKWebAppInit"
+        );
+
+
+        document.getElementById(
+            "vkStatus"
+        ).textContent =
+            "🟢 VK подключён";
+
+
+        /*
+         * Получаем информацию
+         * о пользователе
+         */
+
+        try {
+
+            const user =
+                await vkBridge.send(
+                    "VKWebAppGetUserInfo"
+                );
+
+
+            vkUser =
+                user;
+
+
+            document.getElementById(
+                "userName"
+            ).textContent =
+
+                (
+                    user.first_name ||
+                    "Игрок"
+                )
+                +
+                " "
+                +
+                (
+                    user.last_name ||
+                    ""
+                );
+
+
+            document.getElementById(
+                "userId"
+            ).textContent =
+                "VK ID: " +
+                user.id;
+
+
+            if (
+                user.photo_200
+            ) {
+
+                document.getElementById(
+                    "userAvatar"
+                ).src =
+                    user.photo_200;
+
+            }
+
+
+            showStatus(
+                "🟢 VK Bridge работает"
+            );
+
+
+            console.log(
+                "VK USER:",
+                user
+            );
+
+
+        } catch (userError) {
+
+            console.error(
+                "Не удалось получить пользователя:",
+                userError
+            );
+
+
+            document.getElementById(
+                "vkStatus"
+            ).textContent =
+                "🟡 VK без профиля";
+
+
+            showStatus(
+                "🟡 Bridge работает"
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "VK Bridge error:",
+            error
+        );
+
+
+        document.getElementById(
+            "vkStatus"
+        ).textContent =
+            "🔴 Bridge ошибка";
+
+
+        showStatus(
+            "🟡 Игра работает без VK"
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   RESET
+========================================= */
+
+document
+.getElementById(
+    "resetBtn"
+)
+.addEventListener(
+    "click",
+    function() {
+
+        if (
+            !confirm(
+                "Точно сбросить локальный прогресс?"
+            )
+        ) return;
+
+
+        game = {
+
+            coins: 0,
+
+            xp: 0,
+
+            level: 1,
+
+            totalClicks: 0,
+
+            clickPower: 1,
+
+            autoLevel: 0,
+
+            clickUpgradeLevel: 0,
+
+            critUpgradeLevel: 0
+
+        };
+
+
+        updateUI();
+
+
+        showStatus(
+            "🔄 Локальный прогресс сброшен"
+        );
+
+    }
+);
+
+
+/* =========================================
+   START
+========================================= */
+
+updateUI();
+
+initVKBridge();
+
 </script>
 
 </body>
+
 </html>
