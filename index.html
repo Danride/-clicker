@@ -2,11 +2,14 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width,
                    initial-scale=1.0,
                    maximum-scale=1.0,
                    user-scalable=no">
+
+    <meta name="theme-color" content="#19191a">
 
     <title>VK Кликер</title>
 
@@ -16,89 +19,191 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html,
         body {
             margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
             min-height: 100vh;
+            min-height: 100dvh;
+
             font-family: Arial, sans-serif;
-            background: #19191a;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #292929 0%,
+                    #19191a 55%,
+                    #111112 100%
+                );
+
             color: white;
+
             display: flex;
             justify-content: center;
             align-items: center;
+
             overflow: hidden;
+
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .game {
             width: 100%;
             max-width: 500px;
             min-height: 100vh;
-            padding: 30px 20px;
+            min-height: 100dvh;
+
+            padding: 25px 20px;
+
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         h1 {
-            margin: 20px 0 10px;
+            margin: 20px 0 5px;
+
             font-size: 32px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.55;
+            margin-bottom: 20px;
+        }
+
+        .coins-box {
+            text-align: center;
+            margin: 10px 0 30px;
+        }
+
+        .coins-label {
+            font-size: 14px;
+            opacity: 0.55;
+            margin-bottom: 5px;
         }
 
         .coins {
-            font-size: 48px;
+            font-size: 52px;
+            line-height: 1;
             font-weight: bold;
-            margin: 30px 0;
+
+            transition: transform 0.1s;
         }
 
         .click-button {
-            width: 220px;
-            height: 220px;
+            width: 230px;
+            height: 230px;
+
             border: none;
             border-radius: 50%;
-            background: #447bba;
+
+            background: linear-gradient(
+                145deg,
+                #5b9bd5,
+                #315f91
+            );
+
             color: white;
+
             font-size: 30px;
             font-weight: bold;
+
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,.4);
-            transition: transform .08s;
+
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, 0.45),
+                inset 0 3px 0 rgba(255,255,255,0.15);
+
+            transition:
+                transform 0.08s,
+                box-shadow 0.08s;
         }
 
         .click-button:active {
-            transform: scale(.92);
+            transform: scale(0.91);
+
+            box-shadow:
+                0 5px 15px rgba(0, 0, 0, 0.4),
+                inset 0 3px 0 rgba(255,255,255,0.1);
         }
 
         .reset {
-            margin-top: 40px;
+            margin-top: 35px;
+
             padding: 12px 25px;
+
             border: none;
             border-radius: 10px;
-            background: #333;
+
+            background: #303033;
             color: white;
+
+            font-size: 14px;
+
             cursor: pointer;
+
+            transition: background 0.15s;
+        }
+
+        .reset:active {
+            background: #444447;
         }
 
         .status {
             margin-top: auto;
+
+            padding-top: 20px;
+
             font-size: 13px;
-            opacity: .6;
+
+            opacity: 0.55;
+
+            text-align: center;
         }
 
         .pop {
-            animation: pop .15s ease;
+            animation: pop 0.15s ease;
         }
 
         @keyframes pop {
+
             0% {
                 transform: scale(1);
             }
 
             50% {
-                transform: scale(1.2);
+                transform: scale(1.18);
             }
 
             100% {
                 transform: scale(1);
             }
+
+        }
+
+        @media (max-width: 360px) {
+
+            .click-button {
+                width: 190px;
+                height: 190px;
+            }
+
+            .coins {
+                font-size: 44px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
         }
     </style>
 </head>
@@ -109,126 +214,242 @@
 
     <h1>💰 Кликер</h1>
 
-    <div id="counter" class="coins">0</div>
+    <div class="subtitle">
+        Зарабатывай монеты кликами
+    </div>
 
-    <button id="clickBtn" class="click-button">
+    <div class="coins-box">
+
+        <div class="coins-label">
+            МОНЕТЫ
+        </div>
+
+        <div id="counter" class="coins">
+            0
+        </div>
+
+    </div>
+
+    <button
+        id="clickBtn"
+        class="click-button">
         КЛИК
     </button>
 
-    <button id="resetBtn" class="reset">
-        Сбросить
+    <button
+        id="resetBtn"
+        class="reset">
+        Сбросить прогресс
     </button>
 
-    <div id="status" class="status">
+    <div
+        id="status"
+        class="status">
         Подключение к VK...
     </div>
 
 </div>
 
-<!-- VK Bridge -->
+
+<!-- ================================= -->
+<!-- VK BRIDGE                          -->
+<!-- ================================= -->
+
 <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+
 
 <script>
 
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    async function () {
 
-    // =========================
-    // VK MINI APP
-    // =========================
+        /* =================================
+           ЭЛЕМЕНТЫ
+        ================================= */
 
-    const statusEl = document.getElementById("status");
+        const counterEl =
+            document.getElementById("counter");
 
-    try {
+        const clickBtn =
+            document.getElementById("clickBtn");
 
-        await vkBridge.send("VKWebAppInit");
+        const resetBtn =
+            document.getElementById("resetBtn");
 
-        statusEl.textContent = "✅ VK Mini App запущен";
-
-        console.log("VK Bridge подключён");
-
-    } catch (error) {
-
-        statusEl.textContent = "⚠️ Тестовый режим";
-
-        console.log("VK Bridge:", error);
-
-    }
+        const statusEl =
+            document.getElementById("status");
 
 
-    // =========================
-    // КЛИКЕР
-    // =========================
+        /* =================================
+           VK MINI APP
+        ================================= */
 
-    let count = 0;
+        try {
 
-    const counterEl =
-        document.getElementById("counter");
+            await vkBridge.send(
+                "VKWebAppInit"
+            );
 
-    const clickBtn =
-        document.getElementById("clickBtn");
+            statusEl.textContent =
+                "✅ VK Mini App запущен";
 
-    const resetBtn =
-        document.getElementById("resetBtn");
+            console.log(
+                "VK Bridge подключён"
+            );
 
+        } catch (error) {
 
-    // Загружаем сохранение
+            statusEl.textContent =
+                "⚠️ Тестовый режим";
 
-    const saved =
-        localStorage.getItem("clicker_count");
-
-    if (saved !== null) {
-
-        count = parseInt(saved, 10) || 0;
-
-    }
-
-
-    counterEl.textContent = count;
-
-
-    // Клик
-
-    clickBtn.addEventListener("click", function () {
-
-        count++;
-
-        counterEl.textContent = count;
-
-        counterEl.classList.remove("pop");
-
-        void counterEl.offsetWidth;
-
-        counterEl.classList.add("pop");
-
-
-        localStorage.setItem(
-            "clicker_count",
-            count
-        );
-
-    });
-
-
-    // Сброс
-
-    resetBtn.addEventListener("click", function () {
-
-        if (confirm("Точно сбросить прогресс?")) {
-
-            count = 0;
-
-            counterEl.textContent = count;
-
-            localStorage.setItem(
-                "clicker_count",
-                "0"
+            console.log(
+                "VK Bridge:",
+                error
             );
 
         }
 
-    });
 
-});
+        /* =================================
+           СЧЁТЧИК
+        ================================= */
+
+        let count = 0;
+
+
+        /* =================================
+           ЗАГРУЗКА СОХРАНЕНИЯ
+        ================================= */
+
+        try {
+
+            const saved =
+                localStorage.getItem(
+                    "clicker_count"
+                );
+
+            if (saved !== null) {
+
+                count =
+                    parseInt(
+                        saved,
+                        10
+                    ) || 0;
+
+            }
+
+        } catch (error) {
+
+            console.log(
+                "Ошибка загрузки:",
+                error
+            );
+
+        }
+
+
+        counterEl.textContent =
+            count;
+
+
+        /* =================================
+           СОХРАНЕНИЕ
+        ================================= */
+
+        function saveGame() {
+
+            try {
+
+                localStorage.setItem(
+                    "clicker_count",
+                    count
+                );
+
+            } catch (error) {
+
+                console.log(
+                    "Ошибка сохранения:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =================================
+           ОБНОВЛЕНИЕ СЧЁТЧИКА
+        ================================= */
+
+        function updateCounter() {
+
+            counterEl.textContent =
+                count;
+
+            counterEl.classList.remove(
+                "pop"
+            );
+
+            /*
+             * Перезапускаем CSS-анимацию
+             */
+            void counterEl.offsetWidth;
+
+            counterEl.classList.add(
+                "pop"
+            );
+
+        }
+
+
+        /* =================================
+           КЛИК
+        ================================= */
+
+        clickBtn.addEventListener(
+            "click",
+            function () {
+
+                count++;
+
+                updateCounter();
+
+                saveGame();
+
+            }
+        );
+
+
+        /* =================================
+           СБРОС
+        ================================= */
+
+        resetBtn.addEventListener(
+            "click",
+            function () {
+
+                const confirmed =
+                    confirm(
+                        "Точно сбросить весь прогресс?"
+                    );
+
+                if (!confirmed) {
+                    return;
+                }
+
+                count = 0;
+
+                updateCounter();
+
+                saveGame();
+
+            }
+        );
+
+
+    }
+);
 
 </script>
 
