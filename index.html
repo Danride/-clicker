@@ -2,172 +2,235 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable=no">
+
     <title>VK Кликер</title>
+
     <style>
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
+
         body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #19191a;
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
+        }
+
+        .game {
+            width: 100%;
+            max-width: 500px;
             min-height: 100vh;
-            font-family: -apple-system, sans-serif;
-            background: #f0f2f5;
-            padding: 20px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .app {
-            background: white;
-            padding: 30px;
-            border-radius: 28px;
-            text-align: center;
-            width: 100%;
-            max-width: 320px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+
+        h1 {
+            margin: 20px 0 10px;
+            font-size: 32px;
         }
-        h1 { font-size: 28px; margin-bottom: 5px; }
-        .subtitle { color: #888; font-size: 14px; margin-bottom: 20px; }
-        #counter {
-            font-size: 72px;
-            font-weight: 800;
-            color: #2d81e0;
-            margin: 20px 0;
-        }
-        #clickBtn {
-            background: #2d81e0;
-            color: white;
-            border: none;
-            padding: 18px 40px;
-            font-size: 22px;
+
+        .coins {
+            font-size: 48px;
             font-weight: bold;
-            border-radius: 60px;
-            width: 100%;
+            margin: 30px 0;
+        }
+
+        .click-button {
+            width: 220px;
+            height: 220px;
+            border: none;
+            border-radius: 50%;
+            background: #447bba;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 6px 0 #1a4f8b;
-            transition: transform 0.1s;
+            box-shadow: 0 10px 30px rgba(0,0,0,.4);
+            transition: transform .08s;
         }
-        #clickBtn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #1a4f8b;
+
+        .click-button:active {
+            transform: scale(.92);
         }
-        #resetBtn {
-            background: none;
-            border: 1px solid #ddd;
-            padding: 8px 24px;
-            border-radius: 30px;
-            color: #888;
-            margin-top: 15px;
+
+        .reset {
+            margin-top: 40px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            background: #333;
+            color: white;
             cursor: pointer;
         }
-        #vk-status {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #999;
-            padding: 5px;
+
+        .status {
+            margin-top: auto;
+            font-size: 13px;
+            opacity: .6;
         }
-        .status-ok { color: #2d81e0 !important; }
-        .status-error { color: #e74c3c !important; }
-        .status-warning { color: #f39c12 !important; }
+
+        .pop {
+            animation: pop .15s ease;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
+
 <body>
-    <div class="app">
-        <h1>🍪 Кликер</h1>
-        <div class="subtitle">нажми на печеньку</div>
-        <div id="counter">0</div>
-        <button id="clickBtn">Кликни меня!</button>
-        <br>
-        <button id="resetBtn">Сбросить</button>
-        <div id="vk-status">⏳ Подключение к VK...</div>
+
+<div class="game">
+
+    <h1>💰 Кликер</h1>
+
+    <div id="counter" class="coins">0</div>
+
+    <button id="clickBtn" class="click-button">
+        КЛИК
+    </button>
+
+    <button id="resetBtn" class="reset">
+        Сбросить
+    </button>
+
+    <div id="status" class="status">
+        Подключение к VK...
     </div>
 
-    <!-- ============================================================ -->
-    <!-- ====== ГЛАВНОЕ: ПОДКЛЮЧЕНИЕ VK BRIDGE ====== -->
-    <!-- ============================================================ -->
-    <script src="https://vk.com/js/api/xd_connection.js?2"></script>
-    
-    <script>
-        // ============================================================
-        // 1. ИНИЦИАЛИЗАЦИЯ VK BRIDGE (ОБЯЗАТЕЛЬНО!)
-        // ============================================================
-        const statusEl = document.getElementById('vk-status');
-        
-        // Функция для обновления статуса
-        function setStatus(text, className) {
-            statusEl.textContent = text;
-            statusEl.className = className || '';
-        }
+</div>
 
-        // Пытаемся инициализировать VK
-        try {
-            if (typeof VK !== 'undefined') {
-                VK.init(
-                    function() {
-                        // Успешно!
-                        setStatus('✅ VK Bridge подключен! Приложение работает', 'status-ok');
-                        console.log('✅ VK инициализирован успешно');
-                    },
-                    function(error) {
-                        // VK есть, но инициализация выдала ошибку
-                        setStatus('⚠️ VK Bridge доступен, но есть ошибка', 'status-warning');
-                        console.warn('⚠️ Ошибка VK:', error);
-                    }
-                );
-            } else {
-                // VK Bridge не загрузился
-                setStatus('❌ VK Bridge не загружен. Проверьте интернет.', 'status-error');
-                console.error('❌ VK не определен');
-            }
-        } catch(e) {
-            // Критическая ошибка
-            setStatus('❌ Ошибка загрузки VK Bridge', 'status-error');
-            console.error('❌ Критическая ошибка:', e);
-        }
+<!-- VK Bridge -->
+<script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 
-        // ============================================================
-        // 2. ЛОГИКА КЛИКЕРА
-        // ============================================================
-        let count = 0;
-        const counterEl = document.getElementById('counter');
-        const clickBtn = document.getElementById('clickBtn');
-        const resetBtn = document.getElementById('resetBtn');
+<script>
 
-        function updateCounter() {
+document.addEventListener("DOMContentLoaded", async function () {
+
+    // =========================
+    // VK MINI APP
+    // =========================
+
+    const statusEl = document.getElementById("status");
+
+    try {
+
+        await vkBridge.send("VKWebAppInit");
+
+        statusEl.textContent = "✅ VK Mini App запущен";
+
+        console.log("VK Bridge подключён");
+
+    } catch (error) {
+
+        statusEl.textContent = "⚠️ Тестовый режим";
+
+        console.log("VK Bridge:", error);
+
+    }
+
+
+    // =========================
+    // КЛИКЕР
+    // =========================
+
+    let count = 0;
+
+    const counterEl =
+        document.getElementById("counter");
+
+    const clickBtn =
+        document.getElementById("clickBtn");
+
+    const resetBtn =
+        document.getElementById("resetBtn");
+
+
+    // Загружаем сохранение
+
+    const saved =
+        localStorage.getItem("clicker_count");
+
+    if (saved !== null) {
+
+        count = parseInt(saved, 10) || 0;
+
+    }
+
+
+    counterEl.textContent = count;
+
+
+    // Клик
+
+    clickBtn.addEventListener("click", function () {
+
+        count++;
+
+        counterEl.textContent = count;
+
+        counterEl.classList.remove("pop");
+
+        void counterEl.offsetWidth;
+
+        counterEl.classList.add("pop");
+
+
+        localStorage.setItem(
+            "clicker_count",
+            count
+        );
+
+    });
+
+
+    // Сброс
+
+    resetBtn.addEventListener("click", function () {
+
+        if (confirm("Точно сбросить прогресс?")) {
+
+            count = 0;
+
             counterEl.textContent = count;
-            // Анимация
-            counterEl.style.transform = 'scale(1.2)';
-            setTimeout(() => { counterEl.style.transform = 'scale(1)'; }, 150);
-            // Сохранение
-            localStorage.setItem('clicker_count', count);
+
+            localStorage.setItem(
+                "clicker_count",
+                "0"
+            );
+
         }
 
-        clickBtn.onclick = function() {
-            count++;
-            updateCounter();
-            // Вибрация на мобильных
-            if (window.navigator && window.navigator.vibrate) {
-                window.navigator.vibrate(10);
-            }
-        };
+    });
 
-        resetBtn.onclick = function() {
-            if (confirm('Сбросить счет?')) {
-                count = 0;
-                updateCounter();
-            }
-        };
+});
 
-        // Загрузка сохраненного счета
-        const saved = localStorage.getItem('clicker_count');
-        if (saved !== null) {
-            count = parseInt(saved, 10);
-            counterEl.textContent = count;
-        }
+</script>
 
-        console.log('✅ Кликер загружен, счет:', count);
-    </script>
 </body>
 </html>
