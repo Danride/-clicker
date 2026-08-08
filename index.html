@@ -9,7 +9,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
         }
         body {
             display: flex;
@@ -18,103 +17,119 @@
             min-height: 100vh;
             font-family: -apple-system, sans-serif;
             background: #f0f2f5;
-            margin: 0;
             padding: 20px;
         }
         .app {
             background: white;
-            padding: 30px 20px;
+            padding: 30px;
             border-radius: 28px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
             text-align: center;
             width: 100%;
             max-width: 320px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
         }
-        h1 {
-            font-size: 24px;
-            color: #222;
-            margin-bottom: 10px;
-        }
-        .counter {
-            font-size: 64px;
+        h1 { font-size: 28px; margin-bottom: 5px; }
+        .subtitle { color: #888; font-size: 14px; margin-bottom: 20px; }
+        #counter {
+            font-size: 72px;
             font-weight: 800;
             color: #2d81e0;
             margin: 20px 0;
-            transition: transform 0.1s;
         }
-        .counter.pop {
-            transform: scale(1.2);
-        }
-        .click-btn {
+        #clickBtn {
             background: #2d81e0;
             color: white;
             border: none;
-            padding: 20px 40px;
+            padding: 18px 40px;
             font-size: 22px;
             font-weight: bold;
             border-radius: 60px;
             width: 100%;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            box-shadow: 0 8px 0 #1a4f8b;
-            margin-bottom: 20px;
+            box-shadow: 0 6px 0 #1a4f8b;
+            transition: transform 0.1s;
         }
-        .click-btn:active {
+        #clickBtn:active {
             transform: translateY(4px);
-            box-shadow: 0 4px 0 #1a4f8b;
+            box-shadow: 0 2px 0 #1a4f8b;
         }
-        .reset-btn {
+        #resetBtn {
             background: none;
-            border: 1px solid #ccc;
-            padding: 10px 20px;
+            border: 1px solid #ddd;
+            padding: 8px 24px;
             border-radius: 30px;
-            color: #666;
-            font-size: 14px;
+            color: #888;
+            margin-top: 15px;
             cursor: pointer;
         }
-        .status {
+        #vk-status {
             margin-top: 15px;
             font-size: 12px;
             color: #999;
+            padding: 5px;
         }
-        .status.ok { color: #2d81e0; }
-        .status.error { color: #e74c3c; }
+        .status-ok { color: #2d81e0 !important; }
+        .status-error { color: #e74c3c !important; }
+        .status-warning { color: #f39c12 !important; }
     </style>
 </head>
 <body>
-    <div class="app" id="app">
+    <div class="app">
         <h1>🍪 Кликер</h1>
-        <div class="counter" id="counter">0</div>
-        <button class="click-btn" id="clickBtn">Кликни меня!</button>
+        <div class="subtitle">нажми на печеньку</div>
+        <div id="counter">0</div>
+        <button id="clickBtn">Кликни меня!</button>
         <br>
-        <button class="reset-btn" id="resetBtn">Сбросить</button>
-        <div id="status" class="status">Загрузка...</div>
+        <button id="resetBtn">Сбросить</button>
+        <div id="vk-status">⏳ Подключение к VK...</div>
     </div>
 
-    <!-- ========== VK BRIDGE (ОБЯЗАТЕЛЬНО!) ========== -->
+    <!-- ============================================================ -->
+    <!-- ====== ГЛАВНОЕ: ПОДКЛЮЧЕНИЕ VK BRIDGE ====== -->
+    <!-- ============================================================ -->
     <script src="https://vk.com/js/api/xd_connection.js?2"></script>
     
     <script>
-        // --- Инициализация VK Bridge ---
-        const statusEl = document.getElementById('status');
+        // ============================================================
+        // 1. ИНИЦИАЛИЗАЦИЯ VK BRIDGE (ОБЯЗАТЕЛЬНО!)
+        // ============================================================
+        const statusEl = document.getElementById('vk-status');
         
-        try {
-            VK.init(function() {
-                statusEl.textContent = '✅ VK Bridge подключен!';
-                statusEl.className = 'status ok';
-                console.log('✅ VK инициализирован');
-            }, function(error) {
-                statusEl.textContent = '⚠️ VK Bridge ошибка (но приложение работает)';
-                statusEl.className = 'status error';
-                console.warn('⚠️ Ошибка VK:', error);
-            });
-        } catch(e) {
-            statusEl.textContent = '⚠️ VK Bridge не загружен (тестовый режим)';
-            statusEl.className = 'status error';
-            console.warn('⚠️ VK Bridge ошибка:', e);
+        // Функция для обновления статуса
+        function setStatus(text, className) {
+            statusEl.textContent = text;
+            statusEl.className = className || '';
         }
 
-        // --- Логика кликера ---
+        // Пытаемся инициализировать VK
+        try {
+            if (typeof VK !== 'undefined') {
+                VK.init(
+                    function() {
+                        // Успешно!
+                        setStatus('✅ VK Bridge подключен! Приложение работает', 'status-ok');
+                        console.log('✅ VK инициализирован успешно');
+                    },
+                    function(error) {
+                        // VK есть, но инициализация выдала ошибку
+                        setStatus('⚠️ VK Bridge доступен, но есть ошибка', 'status-warning');
+                        console.warn('⚠️ Ошибка VK:', error);
+                    }
+                );
+            } else {
+                // VK Bridge не загрузился
+                setStatus('❌ VK Bridge не загружен. Проверьте интернет.', 'status-error');
+                console.error('❌ VK не определен');
+            }
+        } catch(e) {
+            // Критическая ошибка
+            setStatus('❌ Ошибка загрузки VK Bridge', 'status-error');
+            console.error('❌ Критическая ошибка:', e);
+        }
+
+        // ============================================================
+        // 2. ЛОГИКА КЛИКЕРА
+        // ============================================================
         let count = 0;
         const counterEl = document.getElementById('counter');
         const clickBtn = document.getElementById('clickBtn');
@@ -122,33 +137,37 @@
 
         function updateCounter() {
             counterEl.textContent = count;
-            counterEl.classList.add('pop');
-            setTimeout(() => {
-                counterEl.classList.remove('pop');
-            }, 150);
+            // Анимация
+            counterEl.style.transform = 'scale(1.2)';
+            setTimeout(() => { counterEl.style.transform = 'scale(1)'; }, 150);
+            // Сохранение
+            localStorage.setItem('clicker_count', count);
         }
 
-        clickBtn.addEventListener('click', function() {
+        clickBtn.onclick = function() {
             count++;
             updateCounter();
-            // Сохраняем прогресс
-            localStorage.setItem('clicker_count', count);
-        });
+            // Вибрация на мобильных
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(10);
+            }
+        };
 
-        resetBtn.addEventListener('click', function() {
-            if (confirm('Точно сбросить?')) {
+        resetBtn.onclick = function() {
+            if (confirm('Сбросить счет?')) {
                 count = 0;
                 updateCounter();
-                localStorage.setItem('clicker_count', count);
             }
-        });
+        };
 
-        // Загружаем сохраненный счет
+        // Загрузка сохраненного счета
         const saved = localStorage.getItem('clicker_count');
         if (saved !== null) {
             count = parseInt(saved, 10);
             counterEl.textContent = count;
         }
+
+        console.log('✅ Кликер загружен, счет:', count);
     </script>
 </body>
 </html>
