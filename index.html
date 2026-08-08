@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VK Кликер</title>
     <style>
-        /* --- Сброс и база --- */
         * {
             margin: 0;
             padding: 0;
@@ -17,282 +16,139 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #e8ecf1;
+            font-family: -apple-system, sans-serif;
+            background: #f0f2f5;
             margin: 0;
-            padding: 16px;
-            touch-action: manipulation;
+            padding: 20px;
         }
         .app {
-            background: #ffffff;
-            padding: 36px 24px 30px;
-            border-radius: 32px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+            background: white;
+            padding: 30px 20px;
+            border-radius: 28px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
             text-align: center;
             width: 100%;
-            max-width: 340px;
-            transition: transform 0.2s;
+            max-width: 320px;
         }
         h1 {
-            font-size: 26px;
-            font-weight: 700;
-            color: #1a1a2e;
-            letter-spacing: -0.3px;
-            margin-bottom: 6px;
+            font-size: 24px;
+            color: #222;
+            margin-bottom: 10px;
         }
-        .subtitle {
-            font-size: 14px;
-            color: #8e8ea0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #f0f0f5;
-            padding-bottom: 16px;
-        }
-        /* --- Счетчик --- */
-        .counter-wrap {
-            background: #f8f9fc;
-            border-radius: 60px;
-            padding: 8px 20px;
-            margin-bottom: 24px;
-            display: inline-block;
-        }
-        #counter {
+        .counter {
             font-size: 64px;
             font-weight: 800;
             color: #2d81e0;
-            line-height: 1.2;
-            transition: transform 0.1s ease;
-            display: inline-block;
+            margin: 20px 0;
+            transition: transform 0.1s;
         }
-        #counter.pop {
-            transform: scale(1.18);
-            color: #ff6b6b;
+        .counter.pop {
+            transform: scale(1.2);
         }
-        /* --- Кнопка клика --- */
-        #clickBtn {
+        .click-btn {
             background: #2d81e0;
-            background: linear-gradient(145deg, #3a8ef5, #1a6bc4);
             color: white;
             border: none;
-            padding: 18px 20px;
+            padding: 20px 40px;
             font-size: 22px;
-            font-weight: 700;
+            font-weight: bold;
             border-radius: 60px;
             width: 100%;
             cursor: pointer;
-            transition: all 0.15s;
-            box-shadow: 0 8px 0 #145399, 0 6px 20px rgba(45, 129, 224, 0.3);
-            letter-spacing: 0.5px;
-            touch-action: manipulation;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 8px 0 #1a4f8b;
+            margin-bottom: 20px;
         }
-        #clickBtn:active {
-            transform: translateY(5px);
-            box-shadow: 0 3px 0 #145399, 0 6px 20px rgba(45, 129, 224, 0.2);
+        .click-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #1a4f8b;
         }
-        /* --- Кнопка сброса --- */
-        #resetBtn {
-            background: transparent;
-            border: 1.5px solid #d0d7e3;
-            padding: 10px 24px;
-            border-radius: 40px;
-            color: #6b7a8f;
+        .reset-btn {
+            background: none;
+            border: 1px solid #ccc;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: #666;
             font-size: 14px;
-            font-weight: 600;
             cursor: pointer;
-            margin-top: 18px;
-            transition: 0.2s;
-            touch-action: manipulation;
         }
-        #resetBtn:active {
-            background: #f0f2f7;
-            transform: scale(0.96);
+        .status {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #999;
         }
-        /* --- Статистика --- */
-        .stats {
-            margin-top: 22px;
-            padding-top: 18px;
-            border-top: 1px solid #eceff5;
-            font-size: 13px;
-            color: #7a889e;
-            display: flex;
-            justify-content: space-between;
-        }
-        .stats span {
-            background: #f5f7fb;
-            padding: 4px 14px;
-            border-radius: 40px;
-        }
-        /* Адаптация для совсем маленьких экранов */
-        @media (max-width: 380px) {
-            .app { padding: 24px 16px; }
-            #counter { font-size: 48px; }
-            #clickBtn { font-size: 18px; padding: 14px; }
-        }
+        .status.ok { color: #2d81e0; }
+        .status.error { color: #e74c3c; }
     </style>
 </head>
 <body>
-
     <div class="app" id="app">
         <h1>🍪 Кликер</h1>
-        <div class="subtitle">нажми на печеньку</div>
-
-        <div class="counter-wrap">
-            <div id="counter">0</div>
-        </div>
-
-        <button id="clickBtn">👆 Клик!</button>
+        <div class="counter" id="counter">0</div>
+        <button class="click-btn" id="clickBtn">Кликни меня!</button>
         <br>
-        <button id="resetBtn">↻ Сбросить</button>
-
-        <div class="stats">
-            <span id="clickCountDisplay">Кликов: 0</span>
-            <span id="sessionDisplay">Сессия: 0</span>
-        </div>
+        <button class="reset-btn" id="resetBtn">Сбросить</button>
+        <div id="status" class="status">Загрузка...</div>
     </div>
 
-    <!-- ===== ПОДКЛЮЧЕНИЕ VK BRIDGE (ОБЯЗАТЕЛЬНО) ===== -->
+    <!-- ========== VK BRIDGE (ОБЯЗАТЕЛЬНО!) ========== -->
     <script src="https://vk.com/js/api/xd_connection.js?2"></script>
-
-    <!-- ===== ОСНОВНОЙ СКРИПТ ===== -->
+    
     <script>
-        (function() {
-            "use strict";
-
-            // --- 1. ИНИЦИАЛИЗАЦИЯ VK ---
-            // Этот код сообщает VK, что приложение загружено и готово к работе.
-            try {
-                VK.init(function() {
-                    console.log('[VK] ✅ Мини-приложение инициализировано успешно');
-                    // Можно отправить событие в VK Analytics, если нужно
-                }, function(error) {
-                    console.warn('[VK] ⚠️ Ошибка инициализации (но приложение может работать):', error);
-                    // В мини-приложениях VK эта ошибка часто возникает при локальном тестировании,
-                    // но в реальном iframe всё работает. Игнорируем.
-                });
-            } catch (e) {
-                console.warn('[VK] ⚠️ VK Bridge не загружен (возможно, тест вне VK)');
-            }
-
-            // --- 2. ЭЛЕМЕНТЫ ---
-            const counterEl = document.getElementById('counter');
-            const clickBtn = document.getElementById('clickBtn');
-            const resetBtn = document.getElementById('resetBtn');
-            const clickCountDisplay = document.getElementById('clickCountDisplay');
-            const sessionDisplay = document.getElementById('sessionDisplay');
-
-            // --- 3. СОСТОЯНИЕ ---
-            let count = 0;
-            let sessionClicks = 0; // кликов за текущую сессию
-
-            // Ключи для localStorage
-            const STORAGE_KEY = 'vk_clicker_count';
-            const SESSION_KEY = 'vk_clicker_session';
-
-            // --- 4. ЗАГРУЗКА СОХРАНЁННЫХ ДАННЫХ ---
-            function loadState() {
-                try {
-                    const savedCount = localStorage.getItem(STORAGE_KEY);
-                    if (savedCount !== null) {
-                        count = parseInt(savedCount, 10) || 0;
-                    }
-                    const savedSession = localStorage.getItem(SESSION_KEY);
-                    if (savedSession !== null) {
-                        sessionClicks = parseInt(savedSession, 10) || 0;
-                    }
-                } catch (e) {
-                    // Если localStorage недоступен — просто игнорируем
-                }
-                updateUI();
-            }
-
-            // --- 5. СОХРАНЕНИЕ ---
-            function saveState() {
-                try {
-                    localStorage.setItem(STORAGE_KEY, String(count));
-                    localStorage.setItem(SESSION_KEY, String(sessionClicks));
-                } catch (e) { /* игнорируем */ }
-            }
-
-            // --- 6. ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ---
-            function updateUI() {
-                counterEl.textContent = count;
-                clickCountDisplay.textContent = `Кликов: ${count}`;
-                sessionDisplay.textContent = `Сессия: ${sessionClicks}`;
-            }
-
-            // Анимация "прыжка" счётчика
-            function animateCounter() {
-                counterEl.classList.add('pop');
-                setTimeout(() => {
-                    counterEl.classList.remove('pop');
-                }, 130);
-            }
-
-            // --- 7. ОСНОВНОЙ КЛИК ---
-            function handleClick() {
-                count++;
-                sessionClicks++;
-                updateUI();
-                animateCounter();
-                saveState();
-
-                // Лёгкая вибрация на мобильных устройствах (если доступно)
-                if (window.navigator && window.navigator.vibrate) {
-                    window.navigator.vibrate(8);
-                }
-
-                // Можно также отправить событие в VK Analytics, если настроено:
-                // VK.callMethod('VKWebAppSendEvent', { event_name: 'click' });
-            }
-
-            // --- 8. СБРОС ---
-            function handleReset() {
-                if (count === 0 && sessionClicks === 0) return;
-                if (confirm('Сбросить весь прогресс?')) {
-                    count = 0;
-                    sessionClicks = 0;
-                    updateUI();
-                    saveState();
-                    // Лёгкая вибрация
-                    if (window.navigator && window.navigator.vibrate) {
-                        window.navigator.vibrate(20);
-                    }
-                }
-            }
-
-            // --- 9. НАВЕШИВАЕМ ОБРАБОТЧИКИ ---
-            clickBtn.addEventListener('click', handleClick);
-            resetBtn.addEventListener('click', handleReset);
-
-            // Для мобильных устройств — отключаем двойной зум при быстрых кликах
-            clickBtn.addEventListener('touchstart', function(e) {
-                // Ничего не делаем, просто предотвращаем zoom
-            }, { passive: true });
-
-            // --- 10. ЗАГРУЗКА ПРИ СТАРТЕ ---
-            loadState();
-
-            // --- 11. АВТОСОХРАНЕНИЕ ПРИ ЗАКРЫТИИ/ОБНОВЛЕНИИ ---
-            window.addEventListener('beforeunload', function() {
-                saveState();
+        // --- Инициализация VK Bridge ---
+        const statusEl = document.getElementById('status');
+        
+        try {
+            VK.init(function() {
+                statusEl.textContent = '✅ VK Bridge подключен!';
+                statusEl.className = 'status ok';
+                console.log('✅ VK инициализирован');
+            }, function(error) {
+                statusEl.textContent = '⚠️ VK Bridge ошибка (но приложение работает)';
+                statusEl.className = 'status error';
+                console.warn('⚠️ Ошибка VK:', error);
             });
+        } catch(e) {
+            statusEl.textContent = '⚠️ VK Bridge не загружен (тестовый режим)';
+            statusEl.className = 'status error';
+            console.warn('⚠️ VK Bridge ошибка:', e);
+        }
 
-            // Дополнительное сохранение каждые 15 секунд (на всякий случай)
-            setInterval(saveState, 15000);
+        // --- Логика кликера ---
+        let count = 0;
+        const counterEl = document.getElementById('counter');
+        const clickBtn = document.getElementById('clickBtn');
+        const resetBtn = document.getElementById('resetBtn');
 
-            console.log('[Кликер] ✅ Приложение загружено. Счёт:', count);
+        function updateCounter() {
+            counterEl.textContent = count;
+            counterEl.classList.add('pop');
+            setTimeout(() => {
+                counterEl.classList.remove('pop');
+            }, 150);
+        }
 
-            // --- 12. (ОПЦИОНАЛЬНО) Передача данных в VK для аналитики ---
-            // Если вы настроили VK Mini App Analytics, можно отправить событие запуска:
-            if (typeof VK !== 'undefined' && VK.callMethod) {
-                try {
-                    VK.callMethod('VKWebAppSendEvent', { 
-                        event_name: 'app_start' 
-                    });
-                } catch (e) { /* игнорируем */ }
+        clickBtn.addEventListener('click', function() {
+            count++;
+            updateCounter();
+            // Сохраняем прогресс
+            localStorage.setItem('clicker_count', count);
+        });
+
+        resetBtn.addEventListener('click', function() {
+            if (confirm('Точно сбросить?')) {
+                count = 0;
+                updateCounter();
+                localStorage.setItem('clicker_count', count);
             }
+        });
 
-        })();
+        // Загружаем сохраненный счет
+        const saved = localStorage.getItem('clicker_count');
+        if (saved !== null) {
+            count = parseInt(saved, 10);
+            counterEl.textContent = count;
+        }
     </script>
-
 </body>
 </html>
