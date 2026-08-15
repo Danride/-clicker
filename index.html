@@ -1626,7 +1626,10 @@ async function loadLeaderboard() {
 
                     return `
 
-                        <div class="leader">
+                        <div
+                            class="leader"
+                            data-vk-id="${escapeHTML(player.vk_id)}"
+                        >
 
                             <div class="leader-place">
                                 #${index + 1}
@@ -1651,6 +1654,62 @@ async function loadLeaderboard() {
 
                 }
             ).join("");
+
+
+        /*
+         * Клик по игроку в рейтинге
+         */
+
+        list
+            .querySelectorAll(".leader")
+            .forEach(
+                function(leader) {
+
+                    leader.addEventListener(
+                        "click",
+                        function() {
+
+                            const vkId =
+                                this.dataset.vkId;
+
+
+                            if (!vkId) {
+
+                                console.error(
+                                    "VK ID игрока отсутствует"
+                                );
+
+                                return;
+
+                            }
+
+
+                            if (
+                                window.vkBridge &&
+                                typeof window.vkBridge.send === "function"
+                            ) {
+
+                                window.vkBridge.send(
+                                    "VKWebAppOpenUserProfile",
+                                    {
+                                        user_id:
+                                            Number(vkId)
+                                    }
+                                );
+
+                            } else {
+
+                                console.error(
+                                    "VK Bridge не найден"
+                                );
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
 
 
     } catch (error) {
@@ -1701,7 +1760,6 @@ function escapeHTML(text) {
         );
 
 }
-
 
 /* =========================================================
    PANELS
