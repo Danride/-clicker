@@ -1631,7 +1631,10 @@ async function loadLeaderboard() {
                                 #${index + 1}
                             </div>
 
-                            <div class="leader-name">
+                            <div
+                                class="leader-name"
+                                onclick="openVKProfile('${player.vk_id}')"
+                            >
                                 ${escapeHTML(
                                     player.name ||
                                     "Игрок"
@@ -1666,6 +1669,18 @@ async function loadLeaderboard() {
         `;
 
     }
+
+}
+
+
+function openVKProfile(vkId) {
+
+    if (!vkId) return;
+
+    window.open(
+        `https://vk.com/id${vkId}`,
+        "_blank"
+    );
 
 }
 
