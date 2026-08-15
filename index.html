@@ -1575,7 +1575,7 @@ async function loadLeaderboard() {
             .from("players")
 
             .select(
-                "name,balance"
+                "vk_id,name,balance,swipes"
             )
 
             .order(
