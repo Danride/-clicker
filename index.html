@@ -1620,16 +1620,15 @@ async function loadLeaderboard() {
 
                         <div class="leader">
 
-                            <div
-    class="leader-name vk-player"
-    onclick="openVKProfile('${player.vk_id}')">
+                            <div class="leader-place">
+                                #${index + 1}
+                            </div>
 
-    ${escapeHTML(
-        player.name ||
-        "Игрок"
-    )}
-
-</div>
+                            <div class="leader-name">
+                                ${escapeHTML(
+                                    player.name ||
+                                    "Игрок"
+                                )}
                             </div>
 
                             <div class="leader-balance">
