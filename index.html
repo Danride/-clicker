@@ -1628,7 +1628,7 @@ async function loadLeaderboard() {
 
                         <div
                             class="leader"
-                            data-vk-id="${escapeHTML(player.vk_id)}"
+                            onclick="openVKProfile('${player.vk_id}')"
                         >
 
                             <div class="leader-place">
@@ -1656,62 +1656,6 @@ async function loadLeaderboard() {
             ).join("");
 
 
-        /*
-         * Клик по игроку в рейтинге
-         */
-
-        list
-            .querySelectorAll(".leader")
-            .forEach(
-                function(leader) {
-
-                    leader.addEventListener(
-                        "click",
-                        function() {
-
-                            const vkId =
-                                this.dataset.vkId;
-
-
-                            if (!vkId) {
-
-                                console.error(
-                                    "VK ID игрока отсутствует"
-                                );
-
-                                return;
-
-                            }
-
-
-                            if (
-                                window.vkBridge &&
-                                typeof window.vkBridge.send === "function"
-                            ) {
-
-                                window.vkBridge.send(
-                                    "VKWebAppOpenUserProfile",
-                                    {
-                                        user_id:
-                                            Number(vkId)
-                                    }
-                                );
-
-                            } else {
-
-                                console.error(
-                                    "VK Bridge не найден"
-                                );
-
-                            }
-
-                        }
-                    );
-
-                }
-            );
-
-
     } catch (error) {
 
         console.error(
@@ -1724,6 +1668,41 @@ async function loadLeaderboard() {
                 Ошибка загрузки рейтинга.
             </div>
         `;
+
+    }
+
+}
+
+
+/*
+ * Открытие профиля игрока VK
+ */
+
+async function openVKProfile(vkId) {
+
+    try {
+
+        console.log(
+            "Открываем профиль:",
+            vkId
+        );
+
+
+        await vkBridge.send(
+            "VKWebAppOpenUserProfile",
+            {
+                user_id:
+                    Number(vkId)
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Ошибка открытия профиля VK:",
+            error
+        );
 
     }
 
@@ -1760,7 +1739,6 @@ function escapeHTML(text) {
         );
 
 }
-
 /* =========================================================
    PANELS
    ========================================================= */
