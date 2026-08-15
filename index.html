@@ -953,12 +953,10 @@ async function initVK() {
             "VKWebAppInit"
         );
 
-
         const user =
             await vkBridge.send(
                 "VKWebAppGetUserInfo"
             );
-
 
         if (user && user.id) {
 
@@ -974,14 +972,12 @@ async function initVK() {
 
         }
 
-
         connection.textContent =
             "VK CONNECTED";
 
         connection.classList.add(
             "online"
         );
-
 
     } catch (error) {
 
@@ -994,6 +990,17 @@ async function initVK() {
             "BROWSER MODE";
 
     }
+
+}
+
+
+// Кликабельный профиль VK
+function openVKProfile(id) {
+
+    window.open(
+        `https://vk.com/id${id}`,
+        "_blank"
+    );
 
 }
 
