@@ -1,25 +1,24 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport"
       content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
+               initial-scale=1,
+               maximum-scale=1,
                user-scalable=no">
 
-<meta name="theme-color" content="#111214">
+<meta name="theme-color" content="#080808">
 
-<title>VK Кликер</title>
+<title>BLACK BAG</title>
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <!-- VK BRIDGE -->
 <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 
 <style>
-
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
@@ -30,1229 +29,773 @@ body {
     margin: 0;
     padding: 0;
     width: 100%;
-    min-height: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #080808;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-
-    min-height: 100vh;
-    min-height: 100dvh;
-
-    font-family: Arial, sans-serif;
-
-    color: white;
-
-    background:
-        radial-gradient(
-            circle at 50% -10%,
-            #343941 0%,
-            #191b1f 40%,
-            #0e0f11 100%
-        );
-
-    user-select: none;
-    -webkit-user-select: none;
-
-    overflow-x: hidden;
-}
-
-.game {
-
-    width: 100%;
-    max-width: 500px;
-
-    min-height: 100vh;
-    min-height: 100dvh;
-
-    margin: auto;
-
-    padding: 20px 16px 30px;
-}
-
-/* HEADER */
-
-.header {
-    text-align: center;
-    margin-bottom: 18px;
-}
-
-.title {
-    font-size: 30px;
-    font-weight: 800;
-    margin-top: 8px;
-}
-
-.subtitle {
-    font-size: 13px;
-    opacity: .5;
-    margin-top: 5px;
-}
-
-/* VK USER */
-
-.user-card {
-
     display: flex;
-
-    align-items: center;
-
-    gap: 12px;
-
-    background:
-        rgba(255,255,255,.05);
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
-    border-radius: 16px;
-
-    padding: 10px 12px;
-
-    margin-bottom: 12px;
-}
-
-.user-avatar {
-
-    width: 42px;
-    height: 42px;
-
-    border-radius: 50%;
-
-    object-fit: cover;
-
-    background: #292c31;
-}
-
-.user-info {
-    flex: 1;
-}
-
-.user-name {
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.user-id {
-    font-size: 10px;
-    opacity: .4;
-    margin-top: 3px;
-}
-
-.vk-status {
-
-    font-size: 11px;
-
-    color: #62b0ff;
-
-    white-space: nowrap;
-}
-
-/* PLAYER */
-
-.player-card {
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.08),
-            rgba(255,255,255,.025)
-        );
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    border-radius: 20px;
-
-    padding: 16px;
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.25);
-
-    margin-bottom: 16px;
-}
-
-.player-top {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-}
-
-.level {
-
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.rank {
-
-    padding: 6px 10px;
-
-    border-radius: 10px;
-
-    background:
-        rgba(255,193,7,.12);
-
-    color: #ffd54a;
-
-    font-size: 12px;
-
-    font-weight: bold;
-}
-
-.xp-text {
-
-    font-size: 12px;
-
-    opacity: .55;
-
-    margin-top: 12px;
-
-    display: flex;
-
-    justify-content: space-between;
-}
-
-.xp-bar {
-
-    width: 100%;
-
-    height: 8px;
-
-    background: #292c31;
-
-    border-radius: 10px;
-
-    overflow: hidden;
-
-    margin-top: 7px;
-}
-
-.xp-fill {
-
-    height: 100%;
-
-    width: 0%;
-
-    background:
-        linear-gradient(
-            90deg,
-            #4da3ff,
-            #7b61ff
-        );
-
-    border-radius: 10px;
-
-    transition: width .25s;
-}
-
-/* COINS */
-
-.coins-box {
-
-    text-align: center;
-
-    margin: 22px 0 20px;
-}
-
-.coins-label {
-
-    font-size: 12px;
-
-    letter-spacing: 2px;
-
-    opacity: .45;
-}
-
-.coins {
-
-    font-size: 52px;
-
-    font-weight: 800;
-
-    margin-top: 5px;
-
-    line-height: 1;
-
-    text-shadow:
-        0 5px 20px
-        rgba(255,193,7,.15);
-
-    transition:
-        transform .1s;
-}
-
-/* CLICK */
-
-.click-area {
-
-    display: flex;
-
     justify-content: center;
+}
+
+.app {
+    width: 100%;
+    max-width: 520px;
+    height: 100dvh;
+    background: #0b0b0b;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    height: 65px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #242424;
+}
+
+.logo {
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 4px;
+}
+
+.connection {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #555;
+}
+
+.connection.online {
+    color: #aaa;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.balance-label {
+    color: #555;
+    font-size: 9px;
+    letter-spacing: 4px;
+    margin-bottom: 7px;
+}
+
+.balance {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -2px;
+}
+
+.currency {
+    font-size: 14px;
+    color: #666;
+    margin-left: 5px;
+}
+
+/* =========================
+   BAG
+========================= */
+
+.bag-wrapper {
+    width: min(76vw, 320px);
+    height: min(76vw, 320px);
+
+    margin: 28px 0 15px;
 
     position: relative;
 
-    margin: 10px 0 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    touch-action: none;
+    user-select: none;
 }
 
-.click-button {
+.circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
 
-    width: 220px;
-    height: 220px;
-
-    border: none;
-
+    border: 1px solid #252525;
     border-radius: 50%;
-
-    background:
-
-        radial-gradient(
-            circle at 35% 25%,
-            #77c3ff,
-            #438ed1 45%,
-            #24598c 100%
-        );
-
-    color: white;
-
-    font-size: 27px;
-
-    font-weight: 800;
-
-    cursor: pointer;
-
-    box-shadow:
-
-        0 20px 45px rgba(0,0,0,.45),
-
-        inset 0 5px 0
-        rgba(255,255,255,.18),
-
-        inset 0 -8px 20px
-        rgba(0,0,0,.2);
-
-    transition:
-        transform .08s,
-        filter .1s;
 }
 
-.click-button:active {
-
-    transform: scale(.91);
-
-    filter: brightness(.9);
-}
-
-.click-info {
+.circle::after {
+    content: "";
 
     position: absolute;
+    inset: 14px;
 
-    bottom: -18px;
-
-    font-size: 13px;
-
-    opacity: .55;
+    border: 1px dashed #202020;
+    border-radius: 50%;
 }
 
-/* STATS */
+/* мешок */
+
+.bag {
+    width: 68%;
+    height: 74%;
+
+    position: relative;
+
+    transform: rotate(-3deg);
+
+    filter:
+        drop-shadow(0 20px 20px rgba(0,0,0,.7));
+
+    transition: transform .08s ease;
+}
+
+.bag.hit {
+    animation: bagHit .16s ease;
+}
+
+@keyframes bagHit {
+
+    0% {
+        transform: rotate(-3deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(4deg) scale(.92);
+    }
+
+    100% {
+        transform: rotate(-3deg) scale(1);
+    }
+}
+
+.bag-body {
+    position: absolute;
+
+    left: 4%;
+    right: 4%;
+    top: 14%;
+    bottom: 3%;
+
+    background: #d5d5d5;
+
+    clip-path:
+        polygon(
+            8% 0,
+            92% 0,
+            100% 92%,
+            88% 100%,
+            12% 100%,
+            0 92%
+        );
+
+    border-radius: 10px 10px 18px 18px;
+}
+
+.bag-body::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            rgba(0,0,0,.035) 0px,
+            rgba(0,0,0,.035) 2px,
+            transparent 2px,
+            transparent 5px
+        );
+}
+
+.bag-mouth {
+    position: absolute;
+
+    left: 12%;
+    right: 12%;
+    top: 8%;
+
+    height: 10%;
+
+    border: 3px solid #222;
+    border-bottom: none;
+
+    border-radius: 50% 50% 0 0;
+}
+
+.knot {
+    position: absolute;
+
+    top: 4%;
+    left: 50%;
+
+    width: 23%;
+    height: 14%;
+
+    transform: translateX(-50%);
+
+    background: #aaa;
+
+    clip-path:
+        polygon(
+            18% 0,
+            82% 0,
+            100% 100%,
+            50% 78%,
+            0 100%
+        );
+}
+
+.stamp {
+    position: absolute;
+
+    left: 50%;
+    top: 48%;
+
+    transform:
+        translate(-50%, -50%)
+        rotate(-7deg);
+
+    border: 3px solid #111;
+
+    padding: 10px 13px;
+
+    color: #111;
+
+    font-size: 17px;
+    font-weight: 900;
+
+    letter-spacing: 3px;
+
+    text-align: center;
+
+    z-index: 2;
+}
+
+/* =========================
+   HINT
+========================= */
+
+.hint {
+    color: #555;
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+}
+
+/* =========================
+   STATS
+========================= */
 
 .stats {
+    width: 100%;
 
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+    margin-top: 18px;
+}
+
+.stat {
+    background: #0f0f0f;
+
+    border: 1px solid #222;
+
+    padding: 12px;
+}
+
+.stat-value {
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.stat-label {
+    margin-top: 4px;
+
+    font-size: 8px;
+
+    letter-spacing: 1px;
+
+    color: #555;
+}
+
+/* =========================
+   NAV
+========================= */
+
+nav {
     display: grid;
 
     grid-template-columns:
         repeat(3, 1fr);
 
-    gap: 8px;
+    border-top: 1px solid #222;
+
+    background: #090909;
+
+    padding-bottom:
+        env(safe-area-inset-bottom);
+}
+
+.nav-button {
+    height: 58px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #555;
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+}
+
+.nav-button.active {
+    color: #fff;
+}
+
+/* =========================
+   PANELS
+========================= */
+
+.panel {
+    position: absolute;
+
+    inset: 0;
+
+    background: #0b0b0b;
+
+    z-index: 20;
+
+    padding: 25px 20px;
+
+    transform:
+        translateY(100%);
+
+    transition:
+        transform .22s ease;
+
+    overflow-y: auto;
+}
+
+.panel.open {
+    transform:
+        translateY(0);
+}
+
+.panel-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom: 1px solid #222;
+
+    padding-bottom: 15px;
 
     margin-bottom: 18px;
 }
 
-.stat {
+.panel-title {
+    font-size: 14px;
 
-    background:
-        rgba(255,255,255,.05);
+    font-weight: 900;
 
-    border:
-        1px solid
-        rgba(255,255,255,.06);
-
-    border-radius: 14px;
-
-    padding: 12px 5px;
-
-    text-align: center;
+    letter-spacing: 3px;
 }
 
-.stat-value {
+.close-button {
+    width: 34px;
+    height: 34px;
 
-    font-size: 17px;
+    border: 1px solid #292929;
 
-    font-weight: bold;
+    background: #151515;
+
+    color: #fff;
+
+    font-size: 18px;
 }
 
-.stat-label {
+/* =========================
+   SHOP
+========================= */
 
-    font-size: 10px;
+.shop-item {
+    display: flex;
 
-    opacity: .45;
+    align-items: center;
 
+    justify-content: space-between;
+
+    padding: 15px;
+
+    margin-bottom: 8px;
+
+    border: 1px solid #242424;
+
+    background: #0e0e0e;
+}
+
+.shop-name {
+    font-size: 12px;
+
+    font-weight: 900;
+}
+
+.shop-description {
     margin-top: 4px;
+
+    color: #555;
+
+    font-size: 9px;
 }
 
-/* TABS */
+.shop-buy {
+    border: none;
 
-.tabs {
+    background: #eee;
 
+    color: #080808;
+
+    padding: 9px 12px;
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+.shop-buy:disabled {
+    opacity: .25;
+}
+
+/* =========================
+   LEADERBOARD
+========================= */
+
+.leader {
     display: grid;
 
     grid-template-columns:
-        repeat(2, 1fr);
+        40px 1fr auto;
 
-    gap: 8px;
-
-    margin-bottom: 12px;
-}
-
-.tab {
-
-    border: none;
-
-    padding: 12px;
-
-    border-radius: 13px;
-
-    background: #22252a;
-
-    color: white;
-
-    font-weight: bold;
-
-    cursor: pointer;
-}
-
-.tab.active {
-
-    background: #438ed1;
-}
-
-/* PANELS */
-
-.panel {
-
-    background:
-
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.065),
-            rgba(255,255,255,.025)
-        );
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
-    border-radius: 18px;
-
-    padding: 14px;
-
-    margin-bottom: 15px;
-}
-
-.panel-title {
-
-    font-size: 18px;
-
-    font-weight: bold;
-
-    margin-bottom: 12px;
-}
-
-/* SHOP */
-
-.upgrade {
-
-    background: #1d2024;
-
-    border-radius: 15px;
-
-    padding: 13px;
-
-    margin-bottom: 9px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.05);
-}
-
-.upgrade-top {
-
-    display: flex;
-
-    justify-content: space-between;
+    gap: 10px;
 
     align-items: center;
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid #1d1d1d;
 }
 
-.upgrade-name {
+.leader-place {
+    color: #555;
 
-    font-weight: bold;
-
-    font-size: 15px;
+    font-weight: 900;
 }
 
-.upgrade-level {
+.leader-name {
+    font-size: 12px;
+}
+
+.leader-balance {
+    font-size: 12px;
+
+    font-weight: 900;
+}
+
+.empty {
+    color: #555;
+
+    font-size: 11px;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast {
+    position: absolute;
+
+    top: 22%;
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    padding: 9px 13px;
+
+    background: #eee;
+
+    color: #080808;
 
     font-size: 11px;
 
-    opacity: .5;
-
-    margin-top: 3px;
-}
-
-.upgrade-description {
-
-    font-size: 12px;
-
-    opacity: .55;
-
-    margin: 8px 0;
-}
-
-.buy {
-
-    width: 100%;
-
-    border: none;
-
-    border-radius: 10px;
-
-    padding: 10px;
-
-    background: #438ed1;
-
-    color: white;
-
-    font-weight: bold;
-
-    cursor: pointer;
-}
-
-.buy:disabled {
-
-    background: #303338;
-
-    color: #777;
-
-    cursor: default;
-}
-
-/* RATING */
-
-.rating {
-
-    text-align: center;
-
-    padding: 10px;
-}
-
-.rating-number {
-
-    font-size: 42px;
-
-    font-weight: 800;
-
-    color: #ffd54a;
-}
-
-.rating-label {
-
-    font-size: 12px;
-
-    opacity: .5;
-}
-
-.rank-list {
-
-    margin-top: 15px;
-}
-
-.rank-item {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    padding: 11px;
-
-    background: #1d2024;
-
-    border-radius: 11px;
-
-    margin-bottom: 6px;
-
-    font-size: 13px;
-}
-
-.rank-item.current {
-
-    border:
-        1px solid #438ed1;
-
-    background:
-        rgba(67,142,209,.12);
-}
-
-/* RESET */
-
-.reset {
-
-    width: 100%;
-
-    border: none;
-
-    border-radius: 12px;
-
-    padding: 13px;
-
-    background: #292c31;
-
-    color: #aaa;
-
-    font-size: 13px;
-
-    cursor: pointer;
-
-    margin-top: 5px;
-}
-
-/* STATUS */
-
-.status {
-
-    text-align: center;
-
-    font-size: 11px;
-
-    opacity: .35;
-
-    margin-top: 15px;
-}
-
-/* POPUP */
-
-.coin-popup {
-
-    position: fixed;
+    font-weight: 900;
 
     pointer-events: none;
 
-    font-size: 22px;
+    opacity: 0;
 
-    font-weight: bold;
-
-    color: #ffd54a;
-
-    animation:
-        floatUp .8s ease forwards;
-
-    z-index: 999;
+    z-index: 100;
 }
 
-@keyframes floatUp {
+.toast.show {
+    animation:
+        toastAnimation .65s ease;
+}
+
+@keyframes toastAnimation {
 
     0% {
-
-        opacity: 1;
-
-        transform:
-            translateY(0)
-            scale(1);
-    }
-
-    100% {
-
         opacity: 0;
-
         transform:
-            translateY(-70px)
-            scale(1.25);
-    }
-}
-
-.pop {
-
-    animation:
-        pop .15s ease;
-}
-
-@keyframes pop {
-
-    0% {
-        transform: scale(1);
+            translate(-50%, -20%);
     }
 
-    50% {
-        transform: scale(1.15);
+    20% {
+        opacity: 1;
+        transform:
+            translate(-50%, -50%);
+    }
+
+    70% {
+        opacity: 1;
+        transform:
+            translate(-50%, -50%);
     }
 
     100% {
-        transform: scale(1);
+        opacity: 0;
+        transform:
+            translate(-50%, -80%);
     }
 }
-
-.hidden {
-    display: none;
-}
-
-@media (max-width: 360px) {
-
-    .click-button {
-
-        width: 185px;
-        height: 185px;
-
-        font-size: 23px;
-    }
-
-    .coins {
-        font-size: 43px;
-    }
-
-    .title {
-        font-size: 26px;
-    }
-}
-
 </style>
-
 </head>
 
 <body>
 
-<div class="game">
-
+<div class="app">
 
     <!-- HEADER -->
 
-    <div class="header">
+    <header>
 
-        <div class="title">
-            💰 Кликер
-        </div>
-
-        <div class="subtitle">
-            Развивайся • Покупай улучшения • Поднимай рейтинг
-        </div>
-
-    </div>
-
-
-    <!-- VK USER -->
-
-    <div class="user-card">
-
-        <img
-            id="userAvatar"
-            class="user-avatar"
-            src=""
-            alt="VK">
-
-        <div class="user-info">
-
-            <div
-                id="userName"
-                class="user-name">
-
-                Игрок
-
-            </div>
-
-            <div
-                id="userId"
-                class="user-id">
-
-                VK ID: загрузка...
-
-            </div>
-
+        <div class="logo">
+            BLACK BAG
         </div>
 
         <div
-            id="vkStatus"
-            class="vk-status">
-
-            Подключение...
-
+            id="connection"
+            class="connection">
+            OFFLINE
         </div>
 
-    </div>
+    </header>
 
 
-    <!-- PLAYER -->
+    <!-- GAME -->
 
-    <div class="player-card">
+    <main>
 
-        <div class="player-top">
-
-            <div class="level">
-
-                Уровень
-                <span id="level">
-                    1
-                </span>
-
-            </div>
-
-            <div
-                id="rank"
-                class="rank">
-
-                Новичок
-
-            </div>
-
+        <div class="balance-label">
+            БАЛАНС
         </div>
 
-        <div class="xp-text">
+        <div class="balance">
 
-            <span>
-                Опыт
+            <span id="balance">
+                0
             </span>
 
-            <span>
+            <span class="currency">
+                ₽
+            </span>
 
-                <span id="xp">
+        </div>
+
+
+        <!-- BAG -->
+
+        <div
+            id="bagWrapper"
+            class="bag-wrapper">
+
+            <div class="circle"></div>
+
+            <div
+                id="bag"
+                class="bag">
+
+                <div class="bag-mouth"></div>
+
+                <div class="bag-body">
+
+                    <div class="stamp">
+                        BLACK<br>
+                        BAG
+                    </div>
+
+                </div>
+
+                <div class="knot"></div>
+
+            </div>
+
+        </div>
+
+
+        <div class="hint">
+            СВАЙПАЙ ПО МЕШКУ
+        </div>
+
+
+        <!-- STATS -->
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <div
+                    id="power"
+                    class="stat-value">
+                    1 ₽
+                </div>
+
+                <div class="stat-label">
+                    ЗА СВАЙП
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div
+                    id="swipes"
+                    class="stat-value">
                     0
-                </span>
+                </div>
 
-                /
+                <div class="stat-label">
+                    СВАЙПОВ
+                </div>
 
-                <span id="xpNeed">
-                    100
-                </span>
-
-            </span>
-
-        </div>
-
-        <div class="xp-bar">
-
-            <div
-                id="xpFill"
-                class="xp-fill">
             </div>
 
         </div>
 
-    </div>
+    </main>
 
 
-    <!-- COINS -->
+    <!-- NAVIGATION -->
 
-    <div class="coins-box">
-
-        <div class="coins-label">
-            МОНЕТЫ
-        </div>
-
-        <div
-            id="counter"
-            class="coins">
-
-            0
-
-        </div>
-
-    </div>
-
-
-    <!-- CLICK -->
-
-    <div class="click-area">
+    <nav>
 
         <button
-            id="clickBtn"
-            class="click-button">
-
-            КЛИК
-
-        </button>
-
-        <div class="click-info">
-
-            +<span id="clickPowerText">
-                1
-            </span>
-
-            монет за клик
-
-        </div>
-
-    </div>
-
-
-    <!-- STATS -->
-
-    <div class="stats">
-
-        <div class="stat">
-
-            <div
-                id="perSecond"
-                class="stat-value">
-
-                0
-
-            </div>
-
-            <div class="stat-label">
-                В СЕКУНДУ
-            </div>
-
-        </div>
-
-        <div class="stat">
-
-            <div
-                id="criticalChance"
-                class="stat-value">
-
-                5%
-
-            </div>
-
-            <div class="stat-label">
-                КРИТ
-            </div>
-
-        </div>
-
-        <div class="stat">
-
-            <div
-                id="totalClicks"
-                class="stat-value">
-
-                0
-
-            </div>
-
-            <div class="stat-label">
-                КЛИКОВ
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- TABS -->
-
-    <div class="tabs">
-
-        <button
-            id="shopTab"
-            class="tab active">
-
-            🛒 Магазин
-
+            class="nav-button active"
+            data-panel="game">
+            МЕШОК
         </button>
 
         <button
-            id="ratingTab"
-            class="tab">
-
-            🏆 Рейтинг
-
+            class="nav-button"
+            data-panel="shop">
+            УЛУЧШЕНИЯ
         </button>
 
-    </div>
+        <button
+            class="nav-button"
+            data-panel="leaders">
+            РЕЙТИНГ
+        </button>
+
+    </nav>
 
 
     <!-- SHOP -->
 
-    <div
-        id="shopPanel"
+    <section
+        id="shop"
         class="panel">
 
-        <div class="panel-title">
+        <div class="panel-header">
 
-            🛒 Улучшения
-
-        </div>
-
-
-        <!-- CLICK POWER -->
-
-        <div class="upgrade">
-
-            <div class="upgrade-top">
-
-                <div>
-
-                    <div class="upgrade-name">
-                        👆 Сила клика
-                    </div>
-
-                    <div class="upgrade-level">
-
-                        Уровень
-
-                        <span id="clickUpgradeLevel">
-                            0
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="upgrade-description">
-
-                Увеличивает количество монет
-                за один клик.
-
+            <div class="panel-title">
+                УЛУЧШЕНИЯ
             </div>
 
             <button
-                id="buyClickUpgrade"
-                class="buy">
-
-                Купить за
-
-                <span id="clickUpgradeCost">
-                    25
-                </span>
-
-                💰
-
+                class="close-button">
+                ×
             </button>
 
         </div>
 
+        <div id="shopList"></div>
 
-        <!-- AUTO -->
-
-        <div class="upgrade">
-
-            <div class="upgrade-top">
-
-                <div>
-
-                    <div class="upgrade-name">
-                        🤖 Автокликер
-                    </div>
-
-                    <div class="upgrade-level">
-
-                        Уровень
-
-                        <span id="autoUpgradeLevel">
-                            0
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="upgrade-description">
-
-                Автоматически приносит монеты
-                каждую секунду.
-
-            </div>
-
-            <button
-                id="buyAutoUpgrade"
-                class="buy">
-
-                Купить за
-
-                <span id="autoUpgradeCost">
-                    100
-                </span>
-
-                💰
-
-            </button>
-
-        </div>
+    </section>
 
 
-        <!-- CRIT -->
+    <!-- LEADERS -->
 
-        <div class="upgrade">
+    <section
+        id="leaders"
+        class="panel">
 
-            <div class="upgrade-top">
+        <div class="panel-header">
 
-                <div>
-
-                    <div class="upgrade-name">
-                        💥 Критический клик
-                    </div>
-
-                    <div class="upgrade-level">
-
-                        Уровень
-
-                        <span id="critUpgradeLevel">
-                            0
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="upgrade-description">
-
-                Иногда клик приносит x3 монет.
-
-            </div>
-
-            <button
-                id="buyCritUpgrade"
-                class="buy">
-
-                Купить за
-
-                <span id="critUpgradeCost">
-                    250
-                </span>
-
-                💰
-
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- RATING -->
-
-    <div
-        id="ratingPanel"
-        class="panel hidden">
-
-        <div class="panel-title">
-
-            🏆 Твой рейтинг
-
-        </div>
-
-        <div class="rating">
-
-            <div
-                id="ratingNumber"
-                class="rating-number">
-
-                0
-
-            </div>
-
-            <div class="rating-label">
+            <div class="panel-title">
                 РЕЙТИНГ
             </div>
 
-        </div>
-
-        <div class="rank-list">
-
-            <div class="rank-item">
-
-                <span>
-                    🥇 Легенда
-                </span>
-
-                <span>
-                    10 000+
-                </span>
-
-            </div>
-
-            <div class="rank-item">
-
-                <span>
-                    🥈 Мастер
-                </span>
-
-                <span>
-                    5 000+
-                </span>
-
-            </div>
-
-            <div class="rank-item">
-
-                <span>
-                    🥉 Профи
-                </span>
-
-                <span>
-                    2 000+
-                </span>
-
-            </div>
-
-            <div class="rank-item">
-
-                <span>
-                    ⚡ Кликер
-                </span>
-
-                <span>
-                    500+
-                </span>
-
-            </div>
-
-            <div
-                class="rank-item current">
-
-                <span>
-                    👤 Ты
-                </span>
-
-                <span id="ratingRank">
-                    Новичок
-                </span>
-
-            </div>
+            <button
+                class="close-button">
+                ×
+            </button>
 
         </div>
 
-    </div>
+        <div id="leadersList">
+            <div class="empty">
+                Загрузка...
+            </div>
+        </div>
 
-
-    <!-- RESET -->
-
-    <button
-        id="resetBtn"
-        class="reset">
-
-        🔄 Сбросить локальный прогресс
-
-    </button>
+    </section>
 
 
     <div
-        id="status"
-        class="status">
-
-        Запуск игры...
-
+        id="toast"
+        class="toast">
+        +1 ₽
     </div>
 
 </div>
@@ -1260,918 +803,385 @@ body {
 
 <script>
 
-/* =========================================
+/* =========================================================
+   SUPABASE
+   ========================================================= */
+
+/*
+   ПОКА НИЧЕГО НЕ МЕНЯЙ, КРОМЕ ЭТИХ ДВУХ СТРОК.
+
+   Supabase:
+   Project Settings
+   ↓
+   API
+*/
+
+const SUPABASE_URL =
+    "https://zlaykoibaxxohvpqqzyr.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_mEiAWaehBEhKrwQ_tcWFvQ_-VqEuon2";
+
+
+let supabaseClient = null;
+
+if (
+    !SUPABASE_URL.includes("ВСТАВЬ") &&
+    !SUPABASE_ANON_KEY.includes("ВСТАВЬ")
+) {
+
+    supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
+}
+
+
+/* =========================================================
    GAME DATA
-========================================= */
+   ========================================================= */
 
-let game =
-    JSON.parse(
-        localStorage.getItem(
-            "vkClicker"
-        )
-    ) || {
+let player = {
 
-        coins: 0,
+    id:
+        "guest_" +
+        Math.random()
+            .toString(36)
+            .substring(2),
 
-        xp: 0,
+    name:
+        "Игрок"
 
-        level: 1,
-
-        totalClicks: 0,
-
-        clickPower: 1,
-
-        autoLevel: 0,
-
-        clickUpgradeLevel: 0,
-
-        critUpgradeLevel: 0
-
-    };
+};
 
 
-/* =========================================
-   VK DATA
-========================================= */
+let game = {
 
-let vkUser = null;
+    balance: 0,
 
+    power: 1,
 
-/* =========================================
-   ELEMENTS
-========================================= */
+    swipes: 0
 
-const counter =
-    document.getElementById(
-        "counter"
-    );
-
-const levelElement =
-    document.getElementById(
-        "level"
-    );
-
-const xpElement =
-    document.getElementById(
-        "xp"
-    );
-
-const xpNeedElement =
-    document.getElementById(
-        "xpNeed"
-    );
-
-const xpFill =
-    document.getElementById(
-        "xpFill"
-    );
-
-const rankElement =
-    document.getElementById(
-        "rank"
-    );
-
-const clickPowerText =
-    document.getElementById(
-        "clickPowerText"
-    );
-
-const perSecond =
-    document.getElementById(
-        "perSecond"
-    );
-
-const criticalChance =
-    document.getElementById(
-        "criticalChance"
-    );
-
-const totalClicks =
-    document.getElementById(
-        "totalClicks"
-    );
+};
 
 
-/* =========================================
-   XP
-========================================= */
+/* =========================================================
+   DOM
+   ========================================================= */
 
-function getXpNeed() {
+const balanceElement =
+    document.getElementById("balance");
 
-    return Math.floor(
-        100 *
-        Math.pow(
-            1.35,
-            game.level - 1
-        )
-    );
+const powerElement =
+    document.getElementById("power");
 
-}
+const swipesElement =
+    document.getElementById("swipes");
 
+const bag =
+    document.getElementById("bag");
 
-/* =========================================
-   RATING
-========================================= */
+const bagWrapper =
+    document.getElementById("bagWrapper");
 
-function getRating() {
+const connection =
+    document.getElementById("connection");
 
-    return Math.floor(
-
-        game.level * 100 +
-
-        game.totalClicks * 2 +
-
-        game.clickUpgradeLevel * 150 +
-
-        game.autoLevel * 200 +
-
-        game.critUpgradeLevel * 300
-
-    );
-
-}
+const toast =
+    document.getElementById("toast");
 
 
-/* =========================================
-   RANK
-========================================= */
-
-function getRank() {
-
-    const rating =
-        getRating();
-
-    if (rating >= 10000)
-        return "Легенда";
-
-    if (rating >= 5000)
-        return "Мастер";
-
-    if (rating >= 2000)
-        return "Профи";
-
-    if (rating >= 500)
-        return "Кликер";
-
-    return "Новичок";
-}
-
-
-/* =========================================
+/* =========================================================
    FORMAT
-========================================= */
+   ========================================================= */
 
 function formatNumber(number) {
 
-    if (number >= 1000000000) {
-
-        return (
-            number / 1000000000
-        ).toFixed(1) + "B";
-
-    }
-
-    if (number >= 1000000) {
-
-        return (
-            number / 1000000
-        ).toFixed(1) + "M";
-
-    }
-
-    if (number >= 1000) {
-
-        return (
-            number / 1000
-        ).toFixed(1) + "K";
-
-    }
-
-    return Math.floor(number);
-}
-
-
-/* =========================================
-   COSTS
-========================================= */
-
-function clickUpgradeCost() {
-
-    return Math.floor(
-        25 *
-        Math.pow(
-            1.55,
-            game.clickUpgradeLevel
-        )
-    );
-
-}
-
-function autoUpgradeCost() {
-
-    return Math.floor(
-        100 *
-        Math.pow(
-            1.7,
-            game.autoLevel
-        )
-    );
-
-}
-
-function critUpgradeCost() {
-
-    return Math.floor(
-        250 *
-        Math.pow(
-            1.8,
-            game.critUpgradeLevel
-        )
-    );
+    return Math
+        .floor(number)
+        .toLocaleString("ru-RU");
 
 }
 
 
-/* =========================================
-   CRIT
-========================================= */
+/* =========================================================
+   RENDER
+   ========================================================= */
 
-function getCritChance() {
+function render() {
 
-    return Math.min(
-        50,
-        5 +
-        game.critUpgradeLevel * 5
-    );
+    balanceElement.textContent =
+        formatNumber(game.balance);
 
-}
+    powerElement.textContent =
+        formatNumber(game.power) + " ₽";
 
-
-/* =========================================
-   SAVE
-========================================= */
-
-function saveGame() {
-
-    localStorage.setItem(
-        "vkClicker",
-        JSON.stringify(game)
-    );
+    swipesElement.textContent =
+        formatNumber(game.swipes);
 
 }
 
 
-/* =========================================
-   UPDATE UI
-========================================= */
+/* =========================================================
+   TOAST
+   ========================================================= */
 
-function updateUI() {
+function showToast(text) {
 
-    counter.textContent =
-        formatNumber(
-            game.coins
-        );
+    toast.textContent = text;
 
-    levelElement.textContent =
-        game.level;
+    toast.classList.remove("show");
 
-    xpElement.textContent =
-        Math.floor(
-            game.xp
-        );
+    void toast.offsetWidth;
 
-    const xpNeed =
-        getXpNeed();
-
-    xpNeedElement.textContent =
-        xpNeed;
-
-    xpFill.style.width =
-        Math.min(
-            100,
-            game.xp / xpNeed * 100
-        ) + "%";
-
-
-    clickPowerText.textContent =
-        game.clickPower;
-
-    perSecond.textContent =
-        game.autoLevel;
-
-    criticalChance.textContent =
-        getCritChance() + "%";
-
-    totalClicks.textContent =
-        formatNumber(
-            game.totalClicks
-        );
-
-
-    const rank =
-        getRank();
-
-    rankElement.textContent =
-        rank;
-
-    document.getElementById(
-        "ratingNumber"
-    ).textContent =
-        formatNumber(
-            getRating()
-        );
-
-    document.getElementById(
-        "ratingRank"
-    ).textContent =
-        rank;
-
-
-    document.getElementById(
-        "clickUpgradeLevel"
-    ).textContent =
-        game.clickUpgradeLevel;
-
-    document.getElementById(
-        "autoUpgradeLevel"
-    ).textContent =
-        game.autoLevel;
-
-    document.getElementById(
-        "critUpgradeLevel"
-    ).textContent =
-        game.critUpgradeLevel;
-
-
-    const clickCost =
-        clickUpgradeCost();
-
-    const autoCost =
-        autoUpgradeCost();
-
-    const critCost =
-        critUpgradeCost();
-
-
-    document.getElementById(
-        "clickUpgradeCost"
-    ).textContent =
-        formatNumber(
-            clickCost
-        );
-
-    document.getElementById(
-        "autoUpgradeCost"
-    ).textContent =
-        formatNumber(
-            autoCost
-        );
-
-    document.getElementById(
-        "critUpgradeCost"
-    ).textContent =
-        formatNumber(
-            critCost
-        );
-
-
-    document.getElementById(
-        "buyClickUpgrade"
-    ).disabled =
-        game.coins < clickCost;
-
-
-    document.getElementById(
-        "buyAutoUpgrade"
-    ).disabled =
-        game.coins < autoCost;
-
-
-    document.getElementById(
-        "buyCritUpgrade"
-    ).disabled =
-        game.coins < critCost;
-
-
-    saveGame();
+    toast.classList.add("show");
 
 }
 
 
-/* =========================================
-   ADD XP
-========================================= */
-
-function addXP(amount) {
-
-    game.xp += amount;
-
-    let levelUp = false;
-
-
-    while (
-        game.xp >= getXpNeed()
-    ) {
-
-        game.xp -=
-            getXpNeed();
-
-        game.level++;
-
-        levelUp = true;
-
-    }
-
-
-    if (levelUp) {
-
-        const bonus =
-            game.level * 25;
-
-        game.coins +=
-            bonus;
-
-        showStatus(
-            "🎉 Новый уровень! +" +
-            bonus +
-            " 💰"
-        );
-
-    }
-
-}
-
-
-/* =========================================
-   CLICK
-========================================= */
-
-document
-.getElementById(
-    "clickBtn"
-)
-.addEventListener(
-    "click",
-    function(event) {
-
-        let amount =
-            game.clickPower;
-
-
-        const critical =
-            Math.random() * 100 <
-            getCritChance();
-
-
-        if (critical) {
-
-            amount *= 3;
-
-        }
-
-
-        game.coins +=
-            amount;
-
-        game.totalClicks++;
-
-
-        addXP(
-            2 +
-            game.clickUpgradeLevel
-        );
-
-
-        counter.classList.remove(
-            "pop"
-        );
-
-        void counter.offsetWidth;
-
-        counter.classList.add(
-            "pop"
-        );
-
-
-        createPopup(
-            event.clientX,
-            event.clientY,
-            critical
-                ? "💥 +" + amount
-                : "+" + amount
-        );
-
-
-        updateUI();
-
-    }
-);
-
-
-/* =========================================
-   POPUP
-========================================= */
-
-function createPopup(
-    x,
-    y,
-    text
-) {
-
-    const popup =
-        document.createElement(
-            "div"
-        );
-
-    popup.className =
-        "coin-popup";
-
-    popup.textContent =
-        text;
-
-    popup.style.left =
-        x + "px";
-
-    popup.style.top =
-        y + "px";
-
-
-    document.body.appendChild(
-        popup
-    );
-
-
-    setTimeout(
-        function() {
-
-            popup.remove();
-
-        },
-        800
-    );
-
-}
-
-
-/* =========================================
-   BUY CLICK UPGRADE
-========================================= */
-
-document
-.getElementById(
-    "buyClickUpgrade"
-)
-.addEventListener(
-    "click",
-    function() {
-
-        const cost =
-            clickUpgradeCost();
-
-
-        if (
-            game.coins < cost
-        ) return;
-
-
-        game.coins -=
-            cost;
-
-        game.clickUpgradeLevel++;
-
-        game.clickPower++;
-
-
-        showStatus(
-            "👆 Сила клика улучшена!"
-        );
-
-
-        updateUI();
-
-    }
-);
-
-
-/* =========================================
-   BUY AUTO
-========================================= */
-
-document
-.getElementById(
-    "buyAutoUpgrade"
-)
-.addEventListener(
-    "click",
-    function() {
-
-        const cost =
-            autoUpgradeCost();
-
-
-        if (
-            game.coins < cost
-        ) return;
-
-
-        game.coins -=
-            cost;
-
-        game.autoLevel++;
-
-
-        showStatus(
-            "🤖 Автокликер улучшен!"
-        );
-
-
-        updateUI();
-
-    }
-);
-
-
-/* =========================================
-   BUY CRIT
-========================================= */
-
-document
-.getElementById(
-    "buyCritUpgrade"
-)
-.addEventListener(
-    "click",
-    function() {
-
-        const cost =
-            critUpgradeCost();
-
-
-        if (
-            game.coins < cost
-        ) return;
-
-
-        game.coins -=
-            cost;
-
-        game.critUpgradeLevel++;
-
-
-        showStatus(
-            "💥 Критический шанс увеличен!"
-        );
-
-
-        updateUI();
-
-    }
-);
-
-
-/* =========================================
-   AUTO CLICKER
-========================================= */
-
-setInterval(
-    function() {
-
-        if (
-            game.autoLevel > 0
-        ) {
-
-            game.coins +=
-                game.autoLevel;
-
-            addXP(
-                game.autoLevel
-            );
-
-            updateUI();
-
-        }
-
-    },
-    1000
-);
-
-
-/* =========================================
-   TABS
-========================================= */
-
-const shopTab =
-    document.getElementById(
-        "shopTab"
-    );
-
-const ratingTab =
-    document.getElementById(
-        "ratingTab"
-    );
-
-const shopPanel =
-    document.getElementById(
-        "shopPanel"
-    );
-
-const ratingPanel =
-    document.getElementById(
-        "ratingPanel"
-    );
-
-
-shopTab.addEventListener(
-    "click",
-    function() {
-
-        shopTab.classList.add(
-            "active"
-        );
-
-        ratingTab.classList.remove(
-            "active"
-        );
-
-        shopPanel.classList.remove(
-            "hidden"
-        );
-
-        ratingPanel.classList.add(
-            "hidden"
-        );
-
-    }
-);
-
-
-ratingTab.addEventListener(
-    "click",
-    function() {
-
-        ratingTab.classList.add(
-            "active"
-        );
-
-        shopTab.classList.remove(
-            "active"
-        );
-
-        ratingPanel.classList.remove(
-            "hidden"
-        );
-
-        shopPanel.classList.add(
-            "hidden"
-        );
-
-    }
-);
-
-
-/* =========================================
-   STATUS
-========================================= */
-
-function showStatus(text) {
-
-    document.getElementById(
-        "status"
-    ).textContent =
-        text;
-
-}
-
-
-/* =========================================
+/* =========================================================
    VK BRIDGE
-========================================= */
+   ========================================================= */
 
-async function initVKBridge() {
+async function initVK() {
 
     try {
-
-        showStatus(
-            "🔵 Подключение к VK..."
-        );
-
-
-        /*
-         * Инициализируем VK Bridge
-         */
 
         await vkBridge.send(
             "VKWebAppInit"
         );
 
 
-        document.getElementById(
-            "vkStatus"
-        ).textContent =
-            "🟢 VK подключён";
+        const user =
+            await vkBridge.send(
+                "VKWebAppGetUserInfo"
+            );
 
 
-        /*
-         * Получаем информацию
-         * о пользователе
-         */
+        if (user && user.id) {
 
-        try {
+            player.id =
+                String(user.id);
 
-            const user =
-                await vkBridge.send(
-                    "VKWebAppGetUserInfo"
-                );
-
-
-            vkUser =
-                user;
-
-
-            document.getElementById(
-                "userName"
-            ).textContent =
-
+            player.name =
                 (
-                    user.first_name ||
-                    "Игрок"
-                )
-                +
-                " "
-                +
-                (
-                    user.last_name ||
-                    ""
-                );
-
-
-            document.getElementById(
-                "userId"
-            ).textContent =
-                "VK ID: " +
-                user.id;
-
-
-            if (
-                user.photo_200
-            ) {
-
-                document.getElementById(
-                    "userAvatar"
-                ).src =
-                    user.photo_200;
-
-            }
-
-
-            showStatus(
-                "🟢 VK Bridge работает"
-            );
-
-
-            console.log(
-                "VK USER:",
-                user
-            );
-
-
-        } catch (userError) {
-
-            console.error(
-                "Не удалось получить пользователя:",
-                userError
-            );
-
-
-            document.getElementById(
-                "vkStatus"
-            ).textContent =
-                "🟡 VK без профиля";
-
-
-            showStatus(
-                "🟡 Bridge работает"
-            );
+                    user.first_name +
+                    " " +
+                    user.last_name
+                ).trim();
 
         }
+
+
+        connection.textContent =
+            "VK CONNECTED";
+
+        connection.classList.add(
+            "online"
+        );
+
+
+    } catch (error) {
+
+        console.log(
+            "VK Bridge:",
+            error
+        );
+
+        connection.textContent =
+            "BROWSER MODE";
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD PLAYER
+   ========================================================= */
+
+async function loadPlayer() {
+
+    if (!supabaseClient) {
+
+        connection.textContent =
+            "SUPABASE NOT SET";
+
+        return;
+
+    }
+
+
+    try {
+
+        const {
+
+            data,
+
+            error
+
+        } = await supabaseClient
+
+            .from("players")
+
+            .select(
+                "balance,power,swipes,name"
+            )
+
+            .eq(
+                "vk_id",
+                player.id
+            )
+
+            .maybeSingle();
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        if (data) {
+
+            game.balance =
+                Number(data.balance) || 0;
+
+            game.power =
+                Number(data.power) || 1;
+
+            game.swipes =
+                Number(data.swipes) || 0;
+
+        }
+
+
+        connection.textContent =
+            "ONLINE";
+
+        connection.classList.add(
+            "online"
+        );
+
+
+        render();
 
 
     } catch (error) {
 
         console.error(
-            "VK Bridge error:",
+            "Supabase LOAD:",
             error
         );
 
+        connection.textContent =
+            "DATABASE ERROR";
 
-        document.getElementById(
-            "vkStatus"
-        ).textContent =
-            "🔴 Bridge ошибка";
+    }
+
+}
 
 
-        showStatus(
-            "🟡 Игра работает без VK"
+/* =========================================================
+   SAVE PLAYER
+   ========================================================= */
+
+let saveTimeout = null;
+
+
+function scheduleSave() {
+
+    clearTimeout(
+        saveTimeout
+    );
+
+    saveTimeout =
+        setTimeout(
+            savePlayer,
+            1000
+        );
+
+}
+
+
+async function savePlayer() {
+
+    if (!supabaseClient) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const data = {
+
+            vk_id:
+                player.id,
+
+            name:
+                player.name,
+
+            balance:
+                Math.floor(
+                    game.balance
+                ),
+
+            power:
+                Math.floor(
+                    game.power
+                ),
+
+            swipes:
+                Math.floor(
+                    game.swipes
+                ),
+
+            updated_at:
+                new Date()
+                    .toISOString()
+
+        };
+
+
+        const {
+
+            error
+
+        } = await supabaseClient
+
+            .from("players")
+
+            .upsert(
+                data,
+                {
+                    onConflict:
+                        "vk_id"
+                }
+            );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        console.log(
+            "GAME SAVED"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Supabase SAVE:",
+            error
         );
 
     }
@@ -2179,67 +1189,694 @@ async function initVKBridge() {
 }
 
 
-/* =========================================
-   RESET
-========================================= */
+/* =========================================================
+   SWIPE SYSTEM
+   ========================================================= */
 
-document
-.getElementById(
-    "resetBtn"
-)
-.addEventListener(
-    "click",
-    function() {
+let startX = 0;
+
+let startY = 0;
+
+let startTime = 0;
+
+let touching = false;
+
+
+bagWrapper.addEventListener(
+    "pointerdown",
+    function(event) {
+
+        touching = true;
+
+        startX =
+            event.clientX;
+
+        startY =
+            event.clientY;
+
+        startTime =
+            performance.now();
+
+        bagWrapper
+            .setPointerCapture?.(
+                event.pointerId
+            );
+
+    }
+);
+
+
+bagWrapper.addEventListener(
+    "pointerup",
+    function(event) {
+
+        if (!touching) {
+
+            return;
+
+        }
+
+        touching = false;
+
+
+        const dx =
+            event.clientX -
+            startX;
+
+        const dy =
+            event.clientY -
+            startY;
+
+
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        const duration =
+            performance.now() -
+            startTime;
+
+
+        /*
+           ВАЖНО:
+
+           Обычный клик не считается.
+
+           Нужен свайп минимум 45px.
+        */
 
         if (
-            !confirm(
-                "Точно сбросить локальный прогресс?"
+            distance < 45 ||
+            duration > 1200
+        ) {
+
+            return;
+
+        }
+
+
+        makeMoney();
+
+    }
+);
+
+
+bagWrapper.addEventListener(
+    "pointercancel",
+    function() {
+
+        touching = false;
+
+    }
+);
+
+
+/* =========================================================
+   MAKE MONEY
+   ========================================================= */
+
+function makeMoney() {
+
+    game.balance +=
+        game.power;
+
+
+    game.swipes++;
+
+
+    bag.classList.remove(
+        "hit"
+    );
+
+    void bag.offsetWidth;
+
+    bag.classList.add(
+        "hit"
+    );
+
+
+    showToast(
+        "+" +
+        formatNumber(
+            game.power
+        ) +
+        " ₽"
+    );
+
+
+    render();
+
+
+    scheduleSave();
+
+}
+
+
+/* =========================================================
+   SHOP
+   ========================================================= */
+
+const upgrades = [
+
+    {
+        name:
+            "МЕЛКАЯ СХЕМА",
+
+        description:
+            "+1 ₽ за свайп",
+
+        cost:
+            25,
+
+        add:
+            1
+    },
+
+    {
+        name:
+            "СЕРЫЙ КУРЬЕР",
+
+        description:
+            "+5 ₽ за свайп",
+
+        cost:
+            250,
+
+        add:
+            5
+    },
+
+    {
+        name:
+            "РЕШЕНО НА УЛИЦЕ",
+
+        description:
+            "+25 ₽ за свайп",
+
+        cost:
+            2500,
+
+        add:
+            25
+    },
+
+    {
+        name:
+            "ЧЁРНЫЙ КАССИР",
+
+        description:
+            "+150 ₽ за свайп",
+
+        cost:
+            25000,
+
+        add:
+            150
+    },
+
+    {
+        name:
+            "КОНТРАБАНДА",
+
+        description:
+            "+1000 ₽ за свайп",
+
+        cost:
+            250000,
+
+        add:
+            1000
+    }
+
+];
+
+
+function renderShop() {
+
+    const list =
+        document.getElementById(
+            "shopList"
+        );
+
+
+    list.innerHTML = "";
+
+
+    upgrades.forEach(
+        function(upgrade, index) {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+            item.className =
+                "shop-item";
+
+
+            const canBuy =
+                game.balance >=
+                upgrade.cost;
+
+
+            item.innerHTML = `
+
+                <div>
+
+                    <div class="shop-name">
+                        ${upgrade.name}
+                    </div>
+
+                    <div class="shop-description">
+                        ${upgrade.description}
+                    </div>
+
+                </div>
+
+                <button
+                    class="shop-buy"
+                    ${canBuy ? "" : "disabled"}
+                >
+
+                    ${formatNumber(
+                        upgrade.cost
+                    )} ₽
+
+                </button>
+
+            `;
+
+
+            item
+                .querySelector("button")
+                .onclick =
+                function() {
+
+                    buyUpgrade(
+                        index
+                    );
+
+                };
+
+
+            list.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+function buyUpgrade(index) {
+
+    const upgrade =
+        upgrades[index];
+
+
+    if (
+        game.balance <
+        upgrade.cost
+    ) {
+
+        return;
+
+    }
+
+
+    game.balance -=
+        upgrade.cost;
+
+
+    game.power +=
+        upgrade.add;
+
+
+    render();
+
+    renderShop();
+
+    scheduleSave();
+
+
+    showToast(
+        "УЛУЧШЕНИЕ КУПЛЕНО"
+    );
+
+}
+
+
+/* =========================================================
+   LEADERBOARD
+   ========================================================= */
+
+async function loadLeaderboard() {
+
+    const list =
+        document.getElementById(
+            "leadersList"
+        );
+
+
+    if (!supabaseClient) {
+
+        list.innerHTML = `
+            <div class="empty">
+                Сначала подключи Supabase.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML = `
+        <div class="empty">
+            Загрузка рейтинга...
+        </div>
+    `;
+
+
+    try {
+
+        const {
+
+            data,
+
+            error
+
+        } = await supabaseClient
+
+            .from("players")
+
+            .select(
+                "name,balance"
             )
-        ) return;
+
+            .order(
+                "balance",
+                {
+                    ascending:
+                        false
+                }
+            )
+
+            .limit(50);
 
 
-        game = {
+        if (error) {
 
-            coins: 0,
+            throw error;
 
-            xp: 0,
-
-            level: 1,
-
-            totalClicks: 0,
-
-            clickPower: 1,
-
-            autoLevel: 0,
-
-            clickUpgradeLevel: 0,
-
-            critUpgradeLevel: 0
-
-        };
+        }
 
 
-        updateUI();
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+            list.innerHTML = `
+                <div class="empty">
+                    Пока игроков нет.
+                </div>
+            `;
+
+            return;
+
+        }
 
 
-        showStatus(
-            "🔄 Локальный прогресс сброшен"
+        list.innerHTML =
+            data.map(
+                function(player, index) {
+
+                    return `
+
+                        <div class="leader">
+
+                            <div class="leader-place">
+                                #${index + 1}
+                            </div>
+
+                            <div class="leader-name">
+                                ${escapeHTML(
+                                    player.name ||
+                                    "Игрок"
+                                )}
+                            </div>
+
+                            <div class="leader-balance">
+                                ${formatNumber(
+                                    player.balance
+                                )} ₽
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            ).join("");
+
+
+    } catch (error) {
+
+        console.error(
+            "LEADERBOARD:",
+            error
+        );
+
+        list.innerHTML = `
+            <div class="empty">
+                Ошибка загрузки рейтинга.
+            </div>
+        `;
+
+    }
+
+}
+
+
+function escapeHTML(text) {
+
+    return String(text)
+        .replace(
+            /[&<>"']/g,
+            function(character) {
+
+                return {
+
+                    "&":
+                        "&amp;",
+
+                    "<":
+                        "&lt;",
+
+                    ">":
+                        "&gt;",
+
+                    '"':
+                        "&quot;",
+
+                    "'":
+                        "&#039;"
+
+                }[character];
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   PANELS
+   ========================================================= */
+
+const panels =
+    document.querySelectorAll(
+        ".panel"
+    );
+
+
+const navButtons =
+    document.querySelectorAll(
+        ".nav-button"
+    );
+
+
+navButtons.forEach(
+    function(button) {
+
+        button.addEventListener(
+            "click",
+            async function() {
+
+                const panel =
+                    button.dataset.panel;
+
+
+                navButtons.forEach(
+                    function(btn) {
+
+                        btn.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                button.classList.add(
+                    "active"
+                );
+
+
+                if (
+                    panel === "shop"
+                ) {
+
+                    document
+                        .getElementById(
+                            "shop"
+                        )
+                        .classList.add(
+                            "open"
+                        );
+
+                    renderShop();
+
+                }
+
+
+                if (
+                    panel === "leaders"
+                ) {
+
+                    document
+                        .getElementById(
+                            "leaders"
+                        )
+                        .classList.add(
+                            "open"
+                        );
+
+                    await loadLeaderboard();
+
+                }
+
+            }
         );
 
     }
 );
 
 
-/* =========================================
+/* CLOSE */
+
+document
+    .querySelectorAll(
+        ".close-button"
+    )
+    .forEach(
+        function(button) {
+
+            button.onclick =
+                function() {
+
+                    panels.forEach(
+                        function(panel) {
+
+                            panel.classList.remove(
+                                "open"
+                            );
+
+                        }
+                    );
+
+
+                    navButtons.forEach(
+                        function(btn) {
+
+                            btn.classList.remove(
+                                "active"
+                            );
+
+                        }
+                    );
+
+
+                    document
+                        .querySelector(
+                            '[data-panel="game"]'
+                        )
+                        .classList.add(
+                            "active"
+                        );
+
+                };
+
+        }
+    );
+
+
+/* =========================================================
+   SAVE WHEN APP GOES BACKGROUND
+   ========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    function() {
+
+        if (
+            document.visibilityState ===
+            "hidden"
+        ) {
+
+            savePlayer();
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "beforeunload",
+    function() {
+
+        savePlayer();
+
+    }
+);
+
+
+/* =========================================================
    START
-========================================= */
+   ========================================================= */
 
-updateUI();
+async function startGame() {
 
-initVKBridge();
+    render();
+
+    await initVK();
+
+    await loadPlayer();
+
+    render();
+
+}
+
+
+startGame();
 
 </script>
 
 </body>
-
 </html>
