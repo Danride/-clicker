@@ -98,13 +98,15 @@ main {
     color: #555;
     font-size: 9px;
     letter-spacing: 4px;
-    margin-bottom: 7px;
+    margin-bottom: 20px;
 }
 
 .balance {
     font-size: 48px;
     font-weight: 900;
     letter-spacing: -2px;
+
+    margin-top: -20px;
 }
 
 .currency {
@@ -121,7 +123,7 @@ main {
     width: min(76vw, 320px);
     height: min(76vw, 320px);
 
-    margin: 28px 0 15px;
+    margin: -20px 0 15px;
 
     position: relative;
 
@@ -133,39 +135,27 @@ main {
     user-select: none;
 }
 
-.circle {
-    position: absolute;
-    width: 100%;
-    height: 100%;
 
-    border: 1px solid #252525;
-    border-radius: 50%;
-}
 
-.circle::after {
-    content: "";
-
-    position: absolute;
-    inset: 14px;
-
-    border: 1px dashed #202020;
-    border-radius: 50%;
-}
-
-/* мешок */
+/* PNG МЕШОК */
 
 .bag {
     width: 68%;
     height: 74%;
 
+    object-fit: contain;
+ image-rendering: auto;
+
     position: relative;
 
-    transform: rotate(-3deg);
+    
 
     filter:
-        drop-shadow(0 20px 20px rgba(0,0,0,.7));
+    
 
     transition: transform .08s ease;
+
+    pointer-events: none;
 }
 
 .bag.hit {
@@ -185,109 +175,6 @@ main {
     100% {
         transform: rotate(-3deg) scale(1);
     }
-}
-
-.bag-body {
-    position: absolute;
-
-    left: 4%;
-    right: 4%;
-    top: 14%;
-    bottom: 3%;
-
-    background: #d5d5d5;
-
-    clip-path:
-        polygon(
-            8% 0,
-            92% 0,
-            100% 92%,
-            88% 100%,
-            12% 100%,
-            0 92%
-        );
-
-    border-radius: 10px 10px 18px 18px;
-}
-
-.bag-body::after {
-    content: "";
-
-    position: absolute;
-    inset: 0;
-
-    background:
-        repeating-linear-gradient(
-            90deg,
-            rgba(0,0,0,.035) 0px,
-            rgba(0,0,0,.035) 2px,
-            transparent 2px,
-            transparent 5px
-        );
-}
-
-.bag-mouth {
-    position: absolute;
-
-    left: 12%;
-    right: 12%;
-    top: 8%;
-
-    height: 10%;
-
-    border: 3px solid #222;
-    border-bottom: none;
-
-    border-radius: 50% 50% 0 0;
-}
-
-.knot {
-    position: absolute;
-
-    top: 4%;
-    left: 50%;
-
-    width: 23%;
-    height: 14%;
-
-    transform: translateX(-50%);
-
-    background: #aaa;
-
-    clip-path:
-        polygon(
-            18% 0,
-            82% 0,
-            100% 100%,
-            50% 78%,
-            0 100%
-        );
-}
-
-.stamp {
-    position: absolute;
-
-    left: 50%;
-    top: 48%;
-
-    transform:
-        translate(-50%, -50%)
-        rotate(-7deg);
-
-    border: 3px solid #111;
-
-    padding: 10px 13px;
-
-    color: #111;
-
-    font-size: 17px;
-    font-weight: 900;
-
-    letter-spacing: 3px;
-
-    text-align: center;
-
-    z-index: 2;
 }
 
 /* =========================
@@ -541,34 +428,34 @@ nav {
 ========================= */
 
 .toast {
-    position: absolute;
+    position: fixed;
 
-    top: 22%;
     left: 50%;
+    top: 50%;
 
-    transform:
-        translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 
-    padding: 9px 13px;
+    padding: 0;
 
-    background: #eee;
+    background: transparent;
 
-    color: #080808;
+    color: white;
 
-    font-size: 11px;
-
+    font-size: 14px;
     font-weight: 900;
+
+    text-shadow:
+        0 2px 5px rgba(0, 0, 0, .8);
 
     pointer-events: none;
 
     opacity: 0;
 
-    z-index: 100;
+    z-index: 1000;
 }
 
 .toast.show {
-    animation:
-        toastAnimation .65s ease;
+    animation: toastAnimation .65s ease;
 }
 
 @keyframes toastAnimation {
@@ -576,25 +463,29 @@ nav {
     0% {
         opacity: 0;
         transform:
-            translate(-50%, -20%);
+            translate(-50%, -20%)
+            scale(.8);
     }
 
     20% {
         opacity: 1;
         transform:
-            translate(-50%, -50%);
+            translate(-50%, -50%)
+            scale(1);
     }
 
     70% {
         opacity: 1;
         transform:
-            translate(-50%, -50%);
+            translate(-50%, -50%)
+            scale(1);
     }
 
     100% {
         opacity: 0;
         transform:
-            translate(-50%, -80%);
+            translate(-50%, -100%)
+            scale(1.05);
     }
 }
 </style>
@@ -609,7 +500,7 @@ nav {
     <header>
 
         <div class="logo">
-            BLACK BAG
+            White Bag
         </div>
 
         <div
@@ -642,40 +533,26 @@ nav {
         </div>
 
 
-        <!-- BAG -->
+       <!-- BAG -->
 
-        <div
-            id="bagWrapper"
-            class="bag-wrapper">
+<div
+    id="bagWrapper"
+    class="bag-wrapper">
 
-            <div class="circle"></div>
+    <div class="circle"></div>
 
-            <div
-                id="bag"
-                class="bag">
+    <img
+        id="bag"
+        class="bag"
+        src="https://i.imageupload.app/11d0c16e257acd58ca42.svg"
+        alt="Bag">
 
-                <div class="bag-mouth"></div>
-
-                <div class="bag-body">
-
-                    <div class="stamp">
-                        BLACK<br>
-                        BAG
-                    </div>
-
-                </div>
-
-                <div class="knot"></div>
-
-            </div>
-
-        </div>
+</div>
 
 
-        <div class="hint">
-            СВАЙПАЙ ПО МЕШКУ
-        </div>
-
+<div class="hint">
+    СВАЙПАЙ ПО МЕШКУ
+</div>
 
         <!-- STATS -->
 
@@ -909,11 +786,21 @@ function formatNumber(number) {
 /* =========================================================
    RENDER
    ========================================================= */
-
 function render() {
 
     balanceElement.textContent =
         formatNumber(game.balance);
+
+    // Уменьшаем баланс при увеличении количества цифр
+    const digits = String(Math.floor(game.balance)).length;
+
+    let size = 48 - (digits - 3) * 3;
+
+    // Минимум 28px, максимум 48px
+    size = Math.max(28, Math.min(48, size));
+
+    balanceElement.style.fontSize = size + "px";
+
 
     powerElement.textContent =
         formatNumber(game.power) + " ₽";
@@ -932,14 +819,25 @@ function showToast(text) {
 
     toast.textContent = text;
 
+    const rect = bagWrapper.getBoundingClientRect();
+
+    const x =
+        rect.left +
+        rect.width * (0.25 + Math.random() * 0.5);
+
+    const y =
+        rect.top +
+        rect.height * (0.25 + Math.random() * 0.5);
+
+    toast.style.left = x + "px";
+    toast.style.top = y + "px";
+
     toast.classList.remove("show");
 
     void toast.offsetWidth;
 
     toast.classList.add("show");
-
 }
-
 
 /* =========================================================
    VK BRIDGE
@@ -953,10 +851,12 @@ async function initVK() {
             "VKWebAppInit"
         );
 
+
         const user =
             await vkBridge.send(
                 "VKWebAppGetUserInfo"
             );
+
 
         if (user && user.id) {
 
@@ -972,12 +872,14 @@ async function initVK() {
 
         }
 
+
         connection.textContent =
             "VK CONNECTED";
 
         connection.classList.add(
             "online"
         );
+
 
     } catch (error) {
 
@@ -990,17 +892,6 @@ async function initVK() {
             "BROWSER MODE";
 
     }
-
-}
-
-
-// Кликабельный профиль VK
-function openVKProfile(id) {
-
-    window.open(
-        `https://vk.com/id${id}`,
-        "_blank"
-    );
 
 }
 
@@ -1350,76 +1241,199 @@ const upgrades = [
 
     {
         name:
-            "МЕЛКАЯ СХЕМА",
+            "Бабуля скамер",
 
         description:
             "+1 ₽ за свайп",
 
         cost:
-            25,
+            50,
 
         add:
-            1
+            1,
+
+        level:
+            0
     },
 
     {
         name:
-            "СЕРЫЙ КУРЬЕР",
+            "Бомжара",
 
         description:
             "+5 ₽ за свайп",
 
         cost:
-            250,
+            500,
 
         add:
-            5
+            5,
+
+        level:
+            0
     },
 
     {
         name:
-            "РЕШЕНО НА УЛИЦЕ",
+            "Школьник-задрот",
 
         description:
             "+25 ₽ за свайп",
 
         cost:
-            2500,
+            5000,
 
         add:
-            25
+            25,
+
+        level:
+            0
     },
 
     {
         name:
-            "ЧЁРНЫЙ КАССИР",
+            "Гопарь",
 
         description:
             "+150 ₽ за свайп",
 
         cost:
-            25000,
+            50000,
 
         add:
-            150
+            150,
+
+        level:
+            0
     },
 
     {
         name:
-            "КОНТРАБАНДА",
+            "Голубь",
 
         description:
             "+1000 ₽ за свайп",
 
         cost:
-            250000,
+            1000000,
 
         add:
-            1000
-    }
+            1000,
+
+        level:
+            0
+    },
+
+{
+    name: "Яжемать",
+    description: "+5000 ₽ за свайп",
+    cost: 5000000,
+    add: 5000,
+    level: 0
+},
 
 ];
 
+
+/* =========================
+   ЦЕНА УЛУЧШЕНИЯ
+========================= */
+
+
+function getUpgradeCost(upgrade) {
+
+    const tier =
+        Math.floor(
+            upgrade.level / 100
+        );
+
+    const multiplier =
+        1.15 +
+        (tier * 0.05);
+
+    return Math.floor(
+        upgrade.cost *
+        Math.pow(
+            multiplier,
+            upgrade.level
+        )
+    );
+
+}
+/* =========================
+   БОНУС УЛУЧШЕНИЯ
+========================= */
+
+function getUpgradeBonus(upgrade) {
+
+    const tier =
+        Math.floor(
+            upgrade.level / 100
+        );
+
+    const bonusMultiplier =
+        Math.pow(
+            1.25,
+            tier
+        );
+
+    return Math.floor(
+        upgrade.add *
+        bonusMultiplier
+    );
+
+}
+
+
+/* =========================
+   ПОКУПКА
+========================= */
+
+function buyUpgrade(index) {
+
+    const upgrade =
+        upgrades[index];
+
+
+    const cost =
+        getUpgradeCost(
+            upgrade
+        );
+
+
+    if (
+        game.balance <
+        cost
+    ) {
+
+        return;
+
+    }
+
+
+    game.balance -=
+        cost;
+
+
+    game.power +=
+        getUpgradeBonus(
+            upgrade
+        );
+
+
+    upgrade.level++;
+
+
+    renderShop();
+
+    renderGame();
+
+}
+
+
+/* =========================
+   МАГАЗИН
+========================= */
 
 function renderShop() {
 
@@ -1429,24 +1443,35 @@ function renderShop() {
         );
 
 
-    list.innerHTML = "";
+    list.innerHTML =
+        "";
 
 
     upgrades.forEach(
-        function(upgrade, index) {
+        function(
+            upgrade,
+            index
+        ) {
 
             const item =
                 document.createElement(
                     "div"
                 );
 
+
             item.className =
                 "shop-item";
 
 
+            const cost =
+                getUpgradeCost(
+                    upgrade
+                );
+
+
             const canBuy =
                 game.balance >=
-                upgrade.cost;
+                cost;
 
 
             item.innerHTML = `
@@ -1454,14 +1479,26 @@ function renderShop() {
                 <div>
 
                     <div class="shop-name">
+
                         ${upgrade.name}
+
+                        <span>
+                            LVL ${upgrade.level}
+                        </span>
+
                     </div>
 
+
                     <div class="shop-description">
-                        ${upgrade.description}
+
+                        +${formatNumber(
+                            upgrade.add
+                        )} ₽ за свайп
+
                     </div>
 
                 </div>
+
 
                 <button
                     class="shop-buy"
@@ -1469,7 +1506,7 @@ function renderShop() {
                 >
 
                     ${formatNumber(
-                        upgrade.cost
+                        cost
                     )} ₽
 
                 </button>
@@ -1478,7 +1515,9 @@ function renderShop() {
 
 
             item
-                .querySelector("button")
+                .querySelector(
+                    "button"
+                )
                 .onclick =
                 function() {
 
@@ -1494,44 +1533,6 @@ function renderShop() {
             );
 
         }
-    );
-
-}
-
-
-function buyUpgrade(index) {
-
-    const upgrade =
-        upgrades[index];
-
-
-    if (
-        game.balance <
-        upgrade.cost
-    ) {
-
-        return;
-
-    }
-
-
-    game.balance -=
-        upgrade.cost;
-
-
-    game.power +=
-        upgrade.add;
-
-
-    render();
-
-    renderShop();
-
-    scheduleSave();
-
-
-    showToast(
-        "УЛУЧШЕНИЕ КУПЛЕНО"
     );
 
 }
@@ -1631,10 +1632,7 @@ async function loadLeaderboard() {
                                 #${index + 1}
                             </div>
 
-                            <div
-                                class="leader-name"
-                                onclick="openVKProfile('${player.vk_id}')"
-                            >
+                            <div class="leader-name">
                                 ${escapeHTML(
                                     player.name ||
                                     "Игрок"
@@ -1669,18 +1667,6 @@ async function loadLeaderboard() {
         `;
 
     }
-
-}
-
-
-function openVKProfile(vkId) {
-
-    if (!vkId) return;
-
-    window.open(
-        `https://vk.com/id${vkId}`,
-        "_blank"
-    );
 
 }
 
