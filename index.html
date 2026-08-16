@@ -1446,18 +1446,18 @@ function buyUpgrade(index) {
         );
 
 
-    if (
-        game.balance <
-        cost
-    ) {
+  if (
+    game.balance <
+    BigInt(cost)
+) {
 
         return;
 
     }
 
 
-    game.balance -=
-        cost;
+ game.balance -=
+    BigInt(cost);
 
 
     game.power +=
@@ -1632,17 +1632,11 @@ async function loadLeaderboard() {
 
             .select(
                 "vk_id,name,balance,swipes"
-            )
+            );
 
-            .order(
-                "balance",
-                {
-                    ascending:
-                        false
-                }
-            )
+           
 
-            .limit(50);
+       
 
 
         if (error) {
@@ -1666,6 +1660,22 @@ async function loadLeaderboard() {
             return;
 
         }
+          data.sort(
+    (a, b) => {
+
+        const balanceA =
+            BigInt(a.balance || "0");
+
+        const balanceB =
+            BigInt(b.balance || "0");
+
+        if (balanceA > balanceB) return -1;
+
+        if (balanceA < balanceB) return 1;
+
+        return 0;
+    }
+);
 
 
         list.innerHTML =
