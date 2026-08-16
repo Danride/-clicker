@@ -735,7 +735,7 @@ let player = {
 
 let game = {
 
-    balance: 0,
+    balance: 0n,
 
     power: 1,
 
@@ -776,12 +776,37 @@ const toast =
 
 function formatNumber(number) {
 
-    return Math
-        .floor(number)
-        .toLocaleString("ru-RU");
+    number = BigInt(number);
 
+    if (number < 1000n) {
+        return number.toString();
+    }
+
+    const units = [
+        "",
+        "K",
+        "M",
+        "B",
+        "T",
+        "Qa",
+        "Qi",
+        "Sx",
+        "Sp",
+        "Oc",
+        "No",
+        "Dc"
+    ];
+
+    let tier = 0;
+    let value = number;
+
+    while (value >= 1000n && tier < units.length - 1) {
+        value /= 1000n;
+        tier++;
+    }
+
+    return value.toString() + units[tier];
 }
-
 
 /* =========================================================
    RENDER
@@ -792,7 +817,7 @@ function render() {
         formatNumber(game.balance);
 
     // Уменьшаем баланс при увеличении количества цифр
-    const digits = String(Math.floor(game.balance)).length;
+ const digits = game.balance.toString().length;
 
     let size = 48 - (digits - 3) * 3;
 
@@ -925,7 +950,7 @@ async function loadPlayer() {
             .from("players")
 
             .select(
-                "balance,power,swipes,name"
+                "balance,power,swipes,name,upgrades"
             )
 
             .eq(
@@ -943,18 +968,36 @@ async function loadPlayer() {
         }
 
 
-        if (data) {
+      if (data) {
 
-            game.balance =
-                Number(data.balance) || 0;
+  game.balance =
+    BigInt(data.balance || "0");
 
-            game.power =
-                Number(data.power) || 1;
+    game.power =
+        Number(data.power) || 1;
 
-            game.swipes =
-                Number(data.swipes) || 0;
+    game.swipes =
+        Number(data.swipes) || 0;
 
-        }
+
+    if (Array.isArray(data.upgrades)) {
+
+        data.upgrades.forEach(
+            (level, index) => {
+
+                if (upgrades[index]) {
+
+                    upgrades[index].level =
+                        Number(level) || 0;
+
+                }
+
+            }
+        );
+
+    }
+
+}
 
 
         connection.textContent =
@@ -1016,35 +1059,38 @@ async function savePlayer() {
 
     try {
 
-        const data = {
+       const data = {
 
-            vk_id:
-                player.id,
+    vk_id:
+        player.id,
 
-            name:
-                player.name,
+    name:
+        player.name,
 
-            balance:
-                Math.floor(
-                    game.balance
-                ),
+balance:
+    game.balance.toString(),
 
-            power:
-                Math.floor(
-                    game.power
-                ),
+    power:
+        Math.floor(
+            game.power
+        ),
 
-            swipes:
-                Math.floor(
-                    game.swipes
-                ),
+    swipes:
+        Math.floor(
+            game.swipes
+        ),
 
-            updated_at:
-                new Date()
-                    .toISOString()
+    upgrades:
+        upgrades.map(
+            upgrade =>
+                upgrade.level
+        ),
 
-        };
+    updated_at:
+        new Date()
+            .toISOString()
 
+};
 
         const {
 
@@ -1199,8 +1245,7 @@ bagWrapper.addEventListener(
 function makeMoney() {
 
     game.balance +=
-        game.power;
-
+    BigInt(game.power);
 
     game.swipes++;
 
@@ -1373,7 +1418,7 @@ function getUpgradeBonus(upgrade) {
 
     const bonusMultiplier =
         Math.pow(
-            1.25,
+            1.15,
             tier
         );
 
@@ -1422,6 +1467,9 @@ function buyUpgrade(index) {
 
 
     upgrade.level++;
+
+
+    scheduleSave();
 
 
     renderShop();
