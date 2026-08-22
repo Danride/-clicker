@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport"
       content="width=device-width,
                initial-scale=1,
@@ -12,213 +15,342 @@
 
 <title>BLACK BAG</title>
 
+
 <!-- SUPABASE -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <!-- VK BRIDGE -->
+
 <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 
+
 <style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
 * {
+
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+
+    -webkit-tap-highlight-color:
+        transparent;
+
 }
+
 
 html,
 body {
+
     margin: 0;
+
     padding: 0;
+
     width: 100%;
+
     height: 100%;
+
     overflow: hidden;
+
     background: #080808;
+
     color: #fff;
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
 }
+
 
 body {
+
     display: flex;
+
     justify-content: center;
+
 }
+
 
 .app {
+
     width: 100%;
+
     max-width: 520px;
+
     height: 100dvh;
+
     background: #0b0b0b;
+
     display: flex;
+
     flex-direction: column;
+
     position: relative;
+
     overflow: hidden;
+
 }
 
-/* =========================
+
+/* =========================================================
    HEADER
-========================= */
+========================================================= */
 
 header {
+
     height: 65px;
+
     padding: 0 20px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
-    border-bottom: 1px solid #242424;
+
+    border-bottom:
+        1px solid #242424;
+
 }
+
 
 .logo {
+
     font-size: 14px;
+
     font-weight: 900;
+
     letter-spacing: 4px;
+
 }
+
 
 .connection {
+
     font-size: 9px;
+
     letter-spacing: 2px;
+
     color: #555;
+
 }
+
 
 .connection.online {
+
     color: #aaa;
+
 }
 
-/* =========================
+
+/* =========================================================
    MAIN
-========================= */
+========================================================= */
 
 main {
+
     flex: 1;
+
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     justify-content: center;
+
     padding: 20px;
+
 }
+
 
 .balance-label {
+
     color: #555;
+
     font-size: 9px;
+
     letter-spacing: 4px;
+
     margin-bottom: 20px;
+
 }
 
+
 .balance {
+
     font-size: 48px;
+
     font-weight: 900;
+
     letter-spacing: -2px;
 
     margin-top: -20px;
+
 }
+
 
 .currency {
+
     font-size: 14px;
+
     color: #666;
+
     margin-left: 5px;
+
 }
 
-/* =========================
+
+/* =========================================================
    BAG
-========================= */
+========================================================= */
 
 .bag-wrapper {
-    width: min(76vw, 320px);
-    height: min(76vw, 320px);
 
-    margin: -20px 0 15px;
+    width:
+        min(76vw, 320px);
+
+    height:
+        min(76vw, 320px);
+
+    margin:
+        -20px 0 15px;
 
     position: relative;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     touch-action: none;
+
     user-select: none;
+
 }
 
 
-
-/* PNG МЕШОК */
-
 .bag {
+
     width: 68%;
+
     height: 74%;
 
     object-fit: contain;
- image-rendering: auto;
+
+    image-rendering: auto;
 
     position: relative;
 
-    
-
-    filter:
-    
-
-    transition: transform .08s ease;
+    transition:
+        transform .08s ease;
 
     pointer-events: none;
+
 }
 
+
 .bag.hit {
-    animation: bagHit .16s ease;
+
+    animation:
+        bagHit .16s ease;
+
 }
+
 
 @keyframes bagHit {
 
     0% {
-        transform: rotate(-3deg) scale(1);
+
+        transform:
+            rotate(-3deg)
+            scale(1);
+
     }
 
     50% {
-        transform: rotate(4deg) scale(.92);
+
+        transform:
+            rotate(4deg)
+            scale(.92);
+
     }
 
     100% {
-        transform: rotate(-3deg) scale(1);
+
+        transform:
+            rotate(-3deg)
+            scale(1);
+
     }
+
 }
 
-/* =========================
+
+/* =========================================================
    HINT
-========================= */
+========================================================= */
 
 .hint {
+
     color: #555;
 
     font-size: 9px;
 
     letter-spacing: 3px;
+
 }
 
-/* =========================
+
+/* =========================================================
    STATS
-========================= */
+========================================================= */
 
 .stats {
+
     width: 100%;
 
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+        1fr 1fr;
 
     gap: 8px;
 
     margin-top: 18px;
+
 }
+
 
 .stat {
+
     background: #0f0f0f;
 
-    border: 1px solid #222;
+    border:
+        1px solid #222;
 
     padding: 12px;
+
 }
+
 
 .stat-value {
+
     font-size: 15px;
+
     font-weight: 900;
+
 }
 
+
 .stat-label {
+
     margin-top: 4px;
 
     font-size: 8px;
@@ -226,27 +358,34 @@ main {
     letter-spacing: 1px;
 
     color: #555;
+
 }
 
-/* =========================
+
+/* =========================================================
    NAV
-========================= */
+========================================================= */
 
 nav {
+
     display: grid;
 
     grid-template-columns:
         repeat(3, 1fr);
 
-    border-top: 1px solid #222;
+    border-top:
+        1px solid #222;
 
     background: #090909;
 
     padding-bottom:
         env(safe-area-inset-bottom);
+
 }
 
+
 .nav-button {
+
     height: 58px;
 
     border: none;
@@ -258,17 +397,23 @@ nav {
     font-size: 9px;
 
     letter-spacing: 2px;
+
 }
+
 
 .nav-button.active {
+
     color: #fff;
+
 }
 
-/* =========================
+
+/* =========================================================
    PANELS
-========================= */
+========================================================= */
 
 .panel {
+
     position: absolute;
 
     inset: 0;
@@ -277,7 +422,8 @@ nav {
 
     z-index: 20;
 
-    padding: 25px 20px;
+    padding:
+        25px 20px;
 
     transform:
         translateY(100%);
@@ -286,53 +432,71 @@ nav {
         transform .22s ease;
 
     overflow-y: auto;
+
 }
+
 
 .panel.open {
+
     transform:
         translateY(0);
+
 }
 
+
 .panel-header {
+
     display: flex;
 
     align-items: center;
 
     justify-content: space-between;
 
-    border-bottom: 1px solid #222;
+    border-bottom:
+        1px solid #222;
 
     padding-bottom: 15px;
 
     margin-bottom: 18px;
+
 }
 
+
 .panel-title {
+
     font-size: 14px;
 
     font-weight: 900;
 
     letter-spacing: 3px;
+
 }
 
+
 .close-button {
+
     width: 34px;
+
     height: 34px;
 
-    border: 1px solid #292929;
+    border:
+        1px solid #292929;
 
     background: #151515;
 
     color: #fff;
 
     font-size: 18px;
+
 }
 
-/* =========================
+
+/* =========================================================
    SHOP
-========================= */
+========================================================= */
 
 .shop-item {
+
     display: flex;
 
     align-items: center;
@@ -343,50 +507,188 @@ nav {
 
     margin-bottom: 8px;
 
-    border: 1px solid #242424;
+    border:
+        1px solid #242424;
 
     background: #0e0e0e;
+
 }
 
+
 .shop-name {
+
     font-size: 12px;
 
     font-weight: 900;
+
 }
 
+
+.shop-name span {
+
+    margin-left: 8px;
+
+    color: #555;
+
+    font-size: 9px;
+
+}
+
+
 .shop-description {
+
     margin-top: 4px;
 
     color: #555;
 
     font-size: 9px;
+
 }
 
+
 .shop-buy {
+
     border: none;
 
     background: #eee;
 
     color: #080808;
 
-    padding: 9px 12px;
+    padding:
+        9px 12px;
 
     font-size: 9px;
 
     font-weight: 900;
 
     letter-spacing: 1px;
+
+    cursor: pointer;
+
 }
+
 
 .shop-buy:disabled {
+
     opacity: .25;
+
+    cursor: default;
+
 }
 
+
 /* =========================
-   LEADERBOARD
+   ПРОГРЕСС ОТКРЫТИЯ
 ========================= */
 
+.unlock-progress {
+
+    padding: 10px 15px 16px;
+
+    margin-top: -8px;
+
+    margin-bottom: 8px;
+
+    background: #0a0a0a;
+
+    border-left: 1px solid #242424;
+
+    border-right: 1px solid #242424;
+
+    border-bottom: 1px solid #242424;
+
+}
+
+
+.unlock-text {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    flex-wrap: wrap;
+
+    color: #555;
+
+    font-size: 9px;
+
+}
+
+
+.unlock-text b {
+
+    color: #aaa;
+
+}
+
+
+.unlock-text span {
+
+    margin-left: auto;
+
+    color: #444;
+
+}
+
+
+/* Полоска */
+
+.progress-bar {
+
+    width: 100%;
+
+    height: 3px;
+
+    margin-top: 8px;
+
+    background: #202020;
+
+    overflow: hidden;
+
+}
+
+
+.progress-fill {
+
+    height: 100%;
+
+    background: #777;
+
+    transition:
+        width .2s ease;
+
+}
+
+
+/* Сколько осталось */
+
+.unlock-need {
+
+    margin-top: 7px;
+
+    color: #444;
+
+    font-size: 8px;
+
+    letter-spacing: .5px;
+
+}
+
+
+.unlock-need b {
+
+    color: #888;
+
+}
+
+/* =========================================================
+   LEADERBOARD
+========================================================= */
+
 .leader {
+
     display: grid;
 
     grid-template-columns:
@@ -398,42 +700,60 @@ nav {
 
     padding: 14px 0;
 
-    border-bottom: 1px solid #1d1d1d;
+    border-bottom:
+        1px solid #1d1d1d;
+
 }
 
+
 .leader-place {
+
     color: #555;
 
     font-weight: 900;
+
 }
+
 
 .leader-name {
+
     font-size: 12px;
+
 }
 
+
 .leader-balance {
+
     font-size: 12px;
 
     font-weight: 900;
+
 }
 
+
 .empty {
+
     color: #555;
 
     font-size: 11px;
+
 }
 
-/* =========================
+
+/* =========================================================
    TOAST
-========================= */
+========================================================= */
 
 .toast {
+
     position: fixed;
 
     left: 50%;
+
     top: 50%;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(-50%, -50%);
 
     padding: 0;
 
@@ -442,6 +762,7 @@ nav {
     color: white;
 
     font-size: 14px;
+
     font-weight: 900;
 
     text-shadow:
@@ -452,255 +773,343 @@ nav {
     opacity: 0;
 
     z-index: 1000;
+
 }
 
+
 .toast.show {
-    animation: toastAnimation .65s ease;
+
+    animation:
+        toastAnimation .65s ease;
+
 }
+
 
 @keyframes toastAnimation {
 
     0% {
+
         opacity: 0;
+
         transform:
             translate(-50%, -20%)
             scale(.8);
+
     }
 
     20% {
+
         opacity: 1;
+
         transform:
             translate(-50%, -50%)
             scale(1);
+
     }
 
     70% {
+
         opacity: 1;
+
         transform:
             translate(-50%, -50%)
             scale(1);
+
     }
 
     100% {
+
         opacity: 0;
+
         transform:
             translate(-50%, -100%)
             scale(1.05);
+
     }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="app">
 
-    <!-- HEADER -->
 
-    <header>
+<!-- =========================================================
+     HEADER
+========================================================= -->
 
-        <div class="logo">
-            White Bag
-        </div>
+<header>
 
-        <div
-            id="connection"
-            class="connection">
-            OFFLINE
-        </div>
-
-    </header>
-
-
-    <!-- GAME -->
-
-    <main>
-
-        <div class="balance-label">
-            БАЛАНС
-        </div>
-
-        <div class="balance">
-
-            <span id="balance">
-                0
-            </span>
-
-            <span class="currency">
-                ₽
-            </span>
-
-        </div>
-
-
-       <!-- BAG -->
-
-<div
-    id="bagWrapper"
-    class="bag-wrapper">
-
-    <div class="circle"></div>
-
-    <img
-        id="bag"
-        class="bag"
-        src="https://i.imageupload.app/11d0c16e257acd58ca42.svg"
-        alt="Bag">
-
-</div>
-
-
-<div class="hint">
-    СВАЙПАЙ ПО МЕШКУ
-</div>
-
-        <!-- STATS -->
-
-        <div class="stats">
-
-            <div class="stat">
-
-                <div
-                    id="power"
-                    class="stat-value">
-                    1 ₽
-                </div>
-
-                <div class="stat-label">
-                    ЗА СВАЙП
-                </div>
-
-            </div>
-
-
-            <div class="stat">
-
-                <div
-                    id="swipes"
-                    class="stat-value">
-                    0
-                </div>
-
-                <div class="stat-label">
-                    СВАЙПОВ
-                </div>
-
-            </div>
-
-        </div>
-
-    </main>
-
-
-    <!-- NAVIGATION -->
-
-    <nav>
-
-        <button
-            class="nav-button active"
-            data-panel="game">
-            МЕШОК
-        </button>
-
-        <button
-            class="nav-button"
-            data-panel="shop">
-            УЛУЧШЕНИЯ
-        </button>
-
-        <button
-            class="nav-button"
-            data-panel="leaders">
-            РЕЙТИНГ
-        </button>
-
-    </nav>
-
-
-    <!-- SHOP -->
-
-    <section
-        id="shop"
-        class="panel">
-
-        <div class="panel-header">
-
-            <div class="panel-title">
-                УЛУЧШЕНИЯ
-            </div>
-
-            <button
-                class="close-button">
-                ×
-            </button>
-
-        </div>
-
-        <div id="shopList"></div>
-
-    </section>
-
-
-    <!-- LEADERS -->
-
-    <section
-        id="leaders"
-        class="panel">
-
-        <div class="panel-header">
-
-            <div class="panel-title">
-                РЕЙТИНГ
-            </div>
-
-            <button
-                class="close-button">
-                ×
-            </button>
-
-        </div>
-
-        <div id="leadersList">
-            <div class="empty">
-                Загрузка...
-            </div>
-        </div>
-
-    </section>
-
+    <div class="logo">
+        White Bag
+    </div>
 
     <div
-        id="toast"
-        class="toast">
-        +1 ₽
+        id="connection"
+        class="connection">
+
+        OFFLINE
+
     </div>
+
+</header>
+
+
+<!-- =========================================================
+     GAME
+========================================================= -->
+
+<main>
+
+
+    <div class="balance-label">
+
+        БАЛАНС
+
+    </div>
+
+
+    <div class="balance">
+
+        <span id="balance">
+
+            0
+
+        </span>
+
+        <span class="currency">
+
+            ₽
+
+        </span>
+
+    </div>
+
+
+    <!-- BAG -->
+
+    <div
+        id="bagWrapper"
+        class="bag-wrapper">
+
+        <div class="circle"></div>
+
+        <img
+            id="bag"
+            class="bag"
+            src="https://i.imageupload.app/11d0c16e257acd58ca42.svg"
+            alt="Bag">
+
+    </div>
+
+
+    <div class="hint">
+
+        СВАЙПАЙ ПО МЕШКУ
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+
+        <div class="stat">
+
+            <div
+                id="power"
+                class="stat-value">
+
+                1 ₽
+
+            </div>
+
+            <div class="stat-label">
+
+                ЗА СВАЙП
+
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div
+                id="swipes"
+                class="stat-value">
+
+                0
+
+            </div>
+
+            <div class="stat-label">
+
+                СВАЙПОВ
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<nav>
+
+
+    <button
+        class="nav-button active"
+        data-panel="game">
+
+        МЕШОК
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-panel="shop">
+
+        УЛУЧШЕНИЯ
+
+    </button>
+
+
+    <button
+        class="nav-button"
+        data-panel="leaders">
+
+        РЕЙТИНГ
+
+    </button>
+
+
+</nav>
+
+
+<!-- =========================================================
+     SHOP
+========================================================= -->
+
+<section
+    id="shop"
+    class="panel">
+
+
+    <div class="panel-header">
+
+
+        <div class="panel-title">
+
+            УЛУЧШЕНИЯ
+
+        </div>
+
+
+        <button
+            class="close-button">
+
+            ×
+
+        </button>
+
+
+    </div>
+
+
+    <div id="shopList"></div>
+
+
+</section>
+
+
+<!-- =========================================================
+     LEADERS
+========================================================= -->
+
+<section
+    id="leaders"
+    class="panel">
+
+
+    <div class="panel-header">
+
+
+        <div class="panel-title">
+
+            РЕЙТИНГ
+
+        </div>
+
+
+        <button
+            class="close-button">
+
+            ×
+
+        </button>
+
+
+    </div>
+
+
+    <div id="leadersList">
+
+        <div class="empty">
+
+            Загрузка...
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<div
+    id="toast"
+    class="toast">
+
+    +1 ₽
+
+</div>
+
 
 </div>
 
 
 <script>
 
+
 /* =========================================================
    SUPABASE
-   ========================================================= */
-
-/*
-   ПОКА НИЧЕГО НЕ МЕНЯЙ, КРОМЕ ЭТИХ ДВУХ СТРОК.
-
-   Supabase:
-   Project Settings
-   ↓
-   API
-*/
+========================================================= */
 
 const SUPABASE_URL =
     "https://zlaykoibaxxohvpqqzyr.supabase.co";
+
 
 const SUPABASE_ANON_KEY =
     "sb_publishable_mEiAWaehBEhKrwQ_tcWFvQ_-VqEuon2";
 
 
 let supabaseClient = null;
+
 
 if (
     !SUPABASE_URL.includes("ВСТАВЬ") &&
@@ -712,12 +1121,13 @@ if (
             SUPABASE_URL,
             SUPABASE_ANON_KEY
         );
+
 }
 
 
 /* =========================================================
-   GAME DATA
-   ========================================================= */
+   PLAYER
+========================================================= */
 
 let player = {
 
@@ -733,6 +1143,10 @@ let player = {
 };
 
 
+/* =========================================================
+   GAME
+========================================================= */
+
 let game = {
 
     balance: 0n,
@@ -746,131 +1160,242 @@ let game = {
 
 /* =========================================================
    DOM
-   ========================================================= */
+========================================================= */
 
 const balanceElement =
-    document.getElementById("balance");
+    document.getElementById(
+        "balance"
+    );
+
 
 const powerElement =
-    document.getElementById("power");
+    document.getElementById(
+        "power"
+    );
+
 
 const swipesElement =
-    document.getElementById("swipes");
+    document.getElementById(
+        "swipes"
+    );
+
 
 const bag =
-    document.getElementById("bag");
+    document.getElementById(
+        "bag"
+    );
+
 
 const bagWrapper =
-    document.getElementById("bagWrapper");
+    document.getElementById(
+        "bagWrapper"
+    );
+
 
 const connection =
-    document.getElementById("connection");
+    document.getElementById(
+        "connection"
+    );
+
 
 const toast =
-    document.getElementById("toast");
+    document.getElementById(
+        "toast"
+    );
 
 
 /* =========================================================
-   FORMAT
-   ========================================================= */
+   FORMAT NUMBER
+========================================================= */
 
 function formatNumber(number) {
 
-    number = BigInt(number);
+    number =
+        BigInt(number);
 
-    if (number < 1000n) {
+
+    if (
+        number < 1000n
+    ) {
+
         return number.toString();
+
     }
+
 
     const units = [
+
         "",
+
         "K",
+
         "M",
+
         "B",
+
         "T",
+
         "Qa",
+
         "Qi",
+
         "Sx",
+
         "Sp",
+
         "Oc",
+
         "No",
+
         "Dc"
+
     ];
 
+
     let tier = 0;
+
     let value = number;
 
-    while (value >= 1000n && tier < units.length - 1) {
+
+    while (
+        value >= 1000n &&
+        tier < units.length - 1
+    ) {
+
         value /= 1000n;
+
         tier++;
+
     }
 
-    return value.toString() + units[tier];
+
+    return (
+        value.toString() +
+        units[tier]
+    );
+
 }
 
+
 /* =========================================================
-   RENDER
-   ========================================================= */
+   RENDER GAME
+========================================================= */
+
 function render() {
 
+
     balanceElement.textContent =
-        formatNumber(game.balance);
+        formatNumber(
+            game.balance
+        );
 
-    // Уменьшаем баланс при увеличении количества цифр
- const digits = game.balance.toString().length;
 
-    let size = 48 - (digits - 3) * 3;
+    const digits =
+        game.balance
+            .toString()
+            .length;
 
-    // Минимум 28px, максимум 48px
-    size = Math.max(28, Math.min(48, size));
 
-    balanceElement.style.fontSize = size + "px";
+    let size =
+        48 -
+        (digits - 3) * 3;
+
+
+    size =
+        Math.max(
+            28,
+            Math.min(
+                48,
+                size
+            )
+        );
+
+
+    balanceElement.style.fontSize =
+        size + "px";
 
 
     powerElement.textContent =
-        formatNumber(game.power) + " ₽";
+        formatNumber(
+            game.power
+        ) +
+        " ₽";
+
 
     swipesElement.textContent =
-        formatNumber(game.swipes);
+        formatNumber(
+            game.swipes
+        );
 
 }
 
 
 /* =========================================================
    TOAST
-   ========================================================= */
+========================================================= */
 
 function showToast(text) {
 
-    toast.textContent = text;
 
-    const rect = bagWrapper.getBoundingClientRect();
+    toast.textContent =
+        text;
+
+
+    const rect =
+        bagWrapper
+            .getBoundingClientRect();
+
 
     const x =
         rect.left +
-        rect.width * (0.25 + Math.random() * 0.5);
+        rect.width *
+        (
+            0.25 +
+            Math.random() * 0.5
+        );
+
 
     const y =
         rect.top +
-        rect.height * (0.25 + Math.random() * 0.5);
+        rect.height *
+        (
+            0.25 +
+            Math.random() * 0.5
+        );
 
-    toast.style.left = x + "px";
-    toast.style.top = y + "px";
 
-    toast.classList.remove("show");
+    toast.style.left =
+        x + "px";
+
+
+    toast.style.top =
+        y + "px";
+
+
+    toast.classList.remove(
+        "show"
+    );
+
 
     void toast.offsetWidth;
 
-    toast.classList.add("show");
+
+    toast.classList.add(
+        "show"
+    );
+
 }
 
+
 /* =========================================================
-   VK BRIDGE
-   ========================================================= */
+   VK
+========================================================= */
 
 async function initVK() {
 
+
     try {
+
 
         await vkBridge.send(
             "VKWebAppInit"
@@ -883,10 +1408,17 @@ async function initVK() {
             );
 
 
-        if (user && user.id) {
+        if (
+            user &&
+            user.id
+        ) {
+
 
             player.id =
-                String(user.id);
+                String(
+                    user.id
+                );
+
 
             player.name =
                 (
@@ -901,6 +1433,7 @@ async function initVK() {
         connection.textContent =
             "VK CONNECTED";
 
+
         connection.classList.add(
             "online"
         );
@@ -908,10 +1441,12 @@ async function initVK() {
 
     } catch (error) {
 
+
         console.log(
             "VK Bridge:",
             error
         );
+
 
         connection.textContent =
             "BROWSER MODE";
@@ -923,14 +1458,17 @@ async function initVK() {
 
 /* =========================================================
    LOAD PLAYER
-   ========================================================= */
+========================================================= */
 
 async function loadPlayer() {
 
+
     if (!supabaseClient) {
+
 
         connection.textContent =
             "SUPABASE NOT SET";
+
 
         return;
 
@@ -938,6 +1476,7 @@ async function loadPlayer() {
 
 
     try {
+
 
         const {
 
@@ -968,40 +1507,63 @@ async function loadPlayer() {
         }
 
 
-      if (data) {
-
-  game.balance =
-    BigInt(data.balance || "0");
-
-    game.power =
-        Number(data.power) || 1;
-
-    game.swipes =
-        Number(data.swipes) || 0;
+        if (data) {
 
 
-    if (Array.isArray(data.upgrades)) {
+            game.balance =
+                BigInt(
+                    data.balance || "0"
+                );
 
-        data.upgrades.forEach(
-            (level, index) => {
 
-                if (upgrades[index]) {
+            game.power =
+                Number(
+                    data.power
+                ) || 1;
 
-                    upgrades[index].level =
-                        Number(level) || 0;
 
-                }
+            game.swipes =
+                Number(
+                    data.swipes
+                ) || 0;
+
+
+            if (
+                Array.isArray(
+                    data.upgrades
+                )
+            ) {
+
+
+                data.upgrades.forEach(
+                    function(
+                        level,
+                        index
+                    ) {
+
+
+                        if (
+                            upgrades[index]
+                        ) {
+
+
+                            upgrades[index]
+                                .level =
+                                Number(level) || 0;
+
+                        }
+
+                    }
+                );
 
             }
-        );
 
-    }
-
-}
+        }
 
 
         connection.textContent =
             "ONLINE";
+
 
         connection.classList.add(
             "online"
@@ -1011,12 +1573,17 @@ async function loadPlayer() {
         render();
 
 
+        renderShop();
+
+
     } catch (error) {
+
 
         console.error(
             "Supabase LOAD:",
             error
         );
+
 
         connection.textContent =
             "DATABASE ERROR";
@@ -1027,17 +1594,19 @@ async function loadPlayer() {
 
 
 /* =========================================================
-   SAVE PLAYER
-   ========================================================= */
+   SAVE
+========================================================= */
 
 let saveTimeout = null;
 
 
 function scheduleSave() {
 
+
     clearTimeout(
         saveTimeout
     );
+
 
     saveTimeout =
         setTimeout(
@@ -1050,6 +1619,7 @@ function scheduleSave() {
 
 async function savePlayer() {
 
+
     if (!supabaseClient) {
 
         return;
@@ -1059,54 +1629,67 @@ async function savePlayer() {
 
     try {
 
-       const data = {
 
-    vk_id:
-        player.id,
+        const data = {
 
-    name:
-        player.name,
 
-balance:
-    game.balance.toString(),
+            vk_id:
+                player.id,
 
-    power:
-        Math.floor(
-            game.power
-        ),
 
-    swipes:
-        Math.floor(
-            game.swipes
-        ),
+            name:
+                player.name,
 
-    upgrades:
-        upgrades.map(
-            upgrade =>
-                upgrade.level
-        ),
 
-    updated_at:
-        new Date()
-            .toISOString()
+            balance:
+                game.balance.toString(),
 
-};
+
+            power:
+                Math.floor(
+                    game.power
+                ),
+
+
+            swipes:
+                Math.floor(
+                    game.swipes
+                ),
+
+
+            upgrades:
+                upgrades.map(
+                    function(upgrade) {
+
+                        return upgrade.level;
+
+                    }
+                ),
+
+
+            updated_at:
+                new Date()
+                    .toISOString()
+
+        };
+
 
         const {
 
             error
 
-        } = await supabaseClient
+        } =
+            await supabaseClient
 
-            .from("players")
+                .from("players")
 
-            .upsert(
-                data,
-                {
-                    onConflict:
-                        "vk_id"
-                }
-            );
+                .upsert(
+                    data,
+                    {
+                        onConflict:
+                            "vk_id"
+                    }
+                );
 
 
         if (error) {
@@ -1123,6 +1706,7 @@ balance:
 
     } catch (error) {
 
+
         console.error(
             "Supabase SAVE:",
             error
@@ -1135,7 +1719,7 @@ balance:
 
 /* =========================================================
    SWIPE SYSTEM
-   ========================================================= */
+========================================================= */
 
 let startX = 0;
 
@@ -1150,16 +1734,21 @@ bagWrapper.addEventListener(
     "pointerdown",
     function(event) {
 
+
         touching = true;
+
 
         startX =
             event.clientX;
 
+
         startY =
             event.clientY;
 
+
         startTime =
             performance.now();
+
 
         bagWrapper
             .setPointerCapture?.(
@@ -1174,11 +1763,13 @@ bagWrapper.addEventListener(
     "pointerup",
     function(event) {
 
+
         if (!touching) {
 
             return;
 
         }
+
 
         touching = false;
 
@@ -1186,6 +1777,7 @@ bagWrapper.addEventListener(
         const dx =
             event.clientX -
             startX;
+
 
         const dy =
             event.clientY -
@@ -1203,14 +1795,6 @@ bagWrapper.addEventListener(
             performance.now() -
             startTime;
 
-
-        /*
-           ВАЖНО:
-
-           Обычный клик не считается.
-
-           Нужен свайп минимум 45px.
-        */
 
         if (
             distance < 45 ||
@@ -1240,12 +1824,16 @@ bagWrapper.addEventListener(
 
 /* =========================================================
    MAKE MONEY
-   ========================================================= */
+========================================================= */
 
 function makeMoney() {
 
+
     game.balance +=
-    BigInt(game.power);
+        BigInt(
+            game.power
+        );
+
 
     game.swipes++;
 
@@ -1254,7 +1842,9 @@ function makeMoney() {
         "hit"
     );
 
+
     void bag.offsetWidth;
+
 
     bag.classList.add(
         "hit"
@@ -1279,142 +1869,775 @@ function makeMoney() {
 
 
 /* =========================================================
-   SHOP
-   ========================================================= */
+   UPGRADES
+========================================================= */
 
 const upgrades = [
 
+
+    /* =========================
+       НИЗЫ
+    ========================= */
+
+
     {
+
         name:
-            "Бабуля скамер",
+            "Бабка у подъезда",
 
         description:
             "+1 ₽ за свайп",
 
         cost:
-            50,
+            25,
 
         add:
             1,
 
         level:
+            0,
+
+        unlockLevel:
             0
+
     },
 
+
     {
+
         name:
-            "Бомжара",
+            "Бабка в доле",
+
+        description:
+            "+2 ₽ за свайп",
+
+        cost:
+            150,
+
+        add:
+            2,
+
+        level:
+            0,
+
+        unlockLevel:
+            10
+
+    },
+
+
+    {
+
+        name:
+            "Бомж с терминалом",
 
         description:
             "+5 ₽ за свайп",
 
         cost:
-            500,
+            750,
 
         add:
             5,
 
         level:
-            0
+            0,
+
+        unlockLevel:
+            15
+
     },
 
+
     {
+
         name:
-            "Школьник-задрот",
+            "Школьник с симкой",
 
         description:
-            "+25 ₽ за свайп",
+            "+12 ₽ за свайп",
 
         cost:
             5000,
 
         add:
-            25,
+            12,
 
         level:
-            0
+            0,
+
+        unlockLevel:
+            20
+
     },
 
+
     {
+
         name:
-            "Гопарь",
+            "Гопник-экономист",
+
+        description:
+            "+30 ₽ за свайп",
+
+        cost:
+            30000,
+
+        add:
+            30,
+
+        level:
+            0,
+
+        unlockLevel:
+            25
+
+    },
+
+
+    {
+
+        name:
+            "Голуби ОПГ",
+
+        description:
+            "+70 ₽ за свайп",
+
+        cost:
+            150000,
+
+        add:
+            70,
+
+        level:
+            0,
+
+        unlockLevel:
+            30
+
+    },
+
+
+    /* =========================
+       СРЕДНИЕ СХЕМЫ
+    ========================= */
+
+
+    {
+
+        name:
+            "Курьер без вопросов",
 
         description:
             "+150 ₽ за свайп",
 
         cost:
-            50000,
+            750000,
 
         add:
             150,
 
         level:
-            0
+            0,
+
+        unlockLevel:
+            35
+
     },
+
 
     {
+
         name:
-            "Голубь",
+            "Таксист всё решит",
 
         description:
-            "+1000 ₽ за свайп",
+            "+350 ₽ за свайп",
 
         cost:
-            1000000,
+            4000000,
 
         add:
-            1000,
+            350,
 
         level:
-            0
+            0,
+
+        unlockLevel:
+            40
+
     },
 
-{
-    name: "Яжемать",
-    description: "+5000 ₽ за свайп",
-    cost: 5000000,
-    add: 5000,
-    level: 0
-},
+
+    {
+
+        name:
+            "Перекуп гаражей",
+
+        description:
+            "+800 ₽ за свайп",
+
+        cost:
+            20000000,
+
+        add:
+            800,
+
+        level:
+            0,
+
+        unlockLevel:
+            45
+
+    },
+
+
+    {
+
+        name:
+            "Коллектор с улыбкой",
+
+        description:
+            "+1800 ₽ за свайп",
+
+        cost:
+            100000000,
+
+        add:
+            1800,
+
+        level:
+            0,
+
+        unlockLevel:
+            50
+
+    },
+
+
+    {
+
+        name:
+            "Карта на дядю",
+
+        description:
+            "+4000 ₽ за свайп",
+
+        cost:
+            500000000,
+
+        add:
+            4000,
+
+        level:
+            0,
+
+        unlockLevel:
+            55
+
+    },
+
+
+    {
+
+        name:
+            "Ларёк 24/7",
+
+        description:
+            "+9000 ₽ за свайп",
+
+        cost:
+            2500000000,
+
+        add:
+            9000,
+
+        level:
+            0,
+
+        unlockLevel:
+            60
+
+    },
+
+
+    /* =========================
+       СЕРЬЁЗНЫЕ СХЕМЫ
+    ========================= */
+
+
+    {
+
+        name:
+            "Тиктокер-решала",
+
+        description:
+            "+22000 ₽ за свайп",
+
+        cost:
+            15000000000,
+
+        add:
+            22000,
+
+        level:
+            0,
+
+        unlockLevel:
+            65
+
+    },
+
+
+    {
+
+        name:
+            "Онлифанс бухгалтер",
+
+        description:
+            "+50000 ₽ за свайп",
+
+        cost:
+            75000000000,
+
+        add:
+            50000,
+
+        level:
+            0,
+
+        unlockLevel:
+            70
+
+    },
+
+
+    {
+
+        name:
+            "Фонд «Держитесь»",
+
+        description:
+            "+120000 ₽ за свайп",
+
+        cost:
+            400000000000,
+
+        add:
+            120000,
+
+        level:
+            0,
+
+        unlockLevel:
+            75
+
+    },
+
+
+    {
+
+        name:
+            "Букмекер из подвала",
+
+        description:
+            "+300000 ₽ за свайп",
+
+        cost:
+            2000000000000,
+
+        add:
+            300000,
+
+        level:
+            0,
+
+        unlockLevel:
+            80
+
+    },
+
+
+    {
+
+        name:
+            "Крипта маминой подруги",
+
+        description:
+            "+700000 ₽ за свайп",
+
+        cost:
+            10000000000000,
+
+        add:
+            700000,
+
+        level:
+            0,
+
+        unlockLevel:
+            85
+
+    },
+
+
+    {
+
+        name:
+            "Риелтор без квартиры",
+
+        description:
+            "+1800000 ₽ за свайп",
+
+        cost:
+            50000000000000,
+
+        add:
+            1800000,
+
+        level:
+            0,
+
+        unlockLevel:
+            90
+
+    },
+
+
+    /* =========================
+       БИЗНЕС-СХЕМЫ
+    ========================= */
+
+
+    {
+
+        name:
+            "Прачечная денег",
+
+        description:
+            "+4500000 ₽ за свайп",
+
+        cost:
+            250000000000000,
+
+        add:
+            4500000,
+
+        level:
+            0,
+
+        unlockLevel:
+            100
+
+    },
+
+
+    {
+
+        name:
+            "Крёстный батя",
+
+        description:
+            "+10000000 ₽ за свайп",
+
+        cost:
+            1000000000000000,
+
+        add:
+            10000000,
+
+        level:
+            0,
+
+        unlockLevel:
+            110
+
+    },
+
+
+    {
+
+        name:
+            "Депутат на связи",
+
+        description:
+            "+25000000 ₽ за свайп",
+
+        cost:
+            5000000000000000,
+
+        add:
+            25000000,
+
+        level:
+            0,
+
+        unlockLevel:
+            120
+
+    },
+
+
+    {
+
+        name:
+            "Губер с кэшем",
+
+        description:
+            "+60000000 ₽ за свайп",
+
+        cost:
+            25000000000000000,
+
+        add:
+            60000000,
+
+        level:
+            0,
+
+        unlockLevel:
+            130
+
+    },
+
+
+    {
+
+        name:
+            "Человек из органов",
+
+        description:
+            "+150000000 ₽ за свайп",
+
+        cost:
+            100000000000000000,
+
+        add:
+            150000000,
+
+        level:
+            0,
+
+        unlockLevel:
+            140
+
+    },
+
+
+    {
+
+        name:
+            "Олигарх с Авито",
+
+        description:
+            "+350000000 ₽ за свайп",
+
+        cost:
+            500000000000000000,
+
+        add:
+            350000000,
+
+        level:
+            0,
+
+        unlockLevel:
+            150
+
+    },
+
+
+    /* =========================
+       ИМПЕРИЯ
+    ========================= */
+
+
+    {
+
+        name:
+            "Телевизор куплен",
+
+        description:
+            "+800000000 ₽ за свайп",
+
+        cost:
+            2500000000000000000,
+
+        add:
+            800000000,
+
+        level:
+            0,
+
+        unlockLevel:
+            160
+
+    },
+
+
+    {
+
+        name:
+            "Банк в гараже",
+
+        description:
+            "+1800000000 ₽ за свайп",
+
+        cost:
+            10000000000000000000,
+
+        add:
+            1800000000,
+
+        level:
+            0,
+
+        unlockLevel:
+            170
+
+    },
+
+
+    {
+
+        name:
+            "Министр мутных дел",
+
+        description:
+            "+4500000000 ₽ за свайп",
+
+        cost:
+            50000000000000000000,
+
+        add:
+            4500000000,
+
+        level:
+            0,
+
+        unlockLevel:
+            180
+
+    },
+
+
+    {
+
+        name:
+            "Папка с документами",
+
+        description:
+            "+10000000000 ₽ за свайп",
+
+        cost:
+            250000000000000000000,
+
+        add:
+            10000000000,
+
+        level:
+            0,
+
+        unlockLevel:
+            190
+
+    },
+
+
+    {
+
+        name:
+            "Вся страна в доле",
+
+        description:
+            "+25000000000 ₽ за свайп",
+
+        cost:
+            1000000000000000000000,
+
+        add:
+            25000000000,
+
+        level:
+            0,
+
+        unlockLevel:
+            200
+
+    },
+
+
+    {
+
+        name:
+            "Дед в Кремле",
+
+        description:
+            "+60000000000 ₽ за свайп",
+
+        cost:
+            5000000000000000000000,
+
+        add:
+            60000000000,
+
+        level:
+            0,
+
+        unlockLevel:
+            225
+
+    }
 
 ];
 
 
-/* =========================
-   ЦЕНА УЛУЧШЕНИЯ
-========================= */
-
+/* =========================================================
+   UPGRADE COST
+========================================================= */
 
 function getUpgradeCost(upgrade) {
+
 
     const tier =
         Math.floor(
             upgrade.level / 100
         );
 
+
     const multiplier =
         1.15 +
-        (tier * 0.05);
+        (
+            tier * 0.05
+        );
+
 
     return Math.floor(
+
         upgrade.cost *
+
         Math.pow(
             multiplier,
             upgrade.level
         )
+
     );
 
 }
-/* =========================
-   БОНУС УЛУЧШЕНИЯ
-========================= */
+
+
+/* =========================================================
+   UPGRADE BONUS
+========================================================= */
 
 function getUpgradeBonus(upgrade) {
+
 
     const tier =
         Math.floor(
             upgrade.level / 100
         );
+
 
     const bonusMultiplier =
         Math.pow(
@@ -1422,22 +2645,82 @@ function getUpgradeBonus(upgrade) {
             tier
         );
 
+
     return Math.floor(
+
         upgrade.add *
         bonusMultiplier
+
     );
 
 }
 
 
-/* =========================
-   ПОКУПКА
-========================= */
+/* =========================================================
+   CHECK UNLOCK
+========================================================= */
+
+function isUpgradeUnlocked(index) {
+
+
+    if (
+        index === 0
+    ) {
+
+        return true;
+
+    }
+
+
+    const previousUpgrade =
+        upgrades[
+            index - 1
+        ];
+
+
+    const currentUpgrade =
+        upgrades[
+            index
+        ];
+
+
+    return (
+
+        previousUpgrade.level >=
+        currentUpgrade.unlockLevel
+
+    );
+
+}
+
+
+/* =========================================================
+   BUY UPGRADE
+========================================================= */
 
 function buyUpgrade(index) {
 
+
     const upgrade =
         upgrades[index];
+
+
+    if (
+        !upgrade
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        !isUpgradeUnlocked(index)
+    ) {
+
+        return;
+
+    }
 
 
     const cost =
@@ -1446,18 +2729,18 @@ function buyUpgrade(index) {
         );
 
 
-  if (
-    game.balance <
-    BigInt(cost)
-) {
+    if (
+        game.balance <
+        BigInt(cost)
+    ) {
 
         return;
 
     }
 
 
- game.balance -=
-    BigInt(cost);
+    game.balance -=
+        BigInt(cost);
 
 
     game.power +=
@@ -1474,123 +2757,236 @@ function buyUpgrade(index) {
 
     renderShop();
 
-    renderGame();
+
+    render();
 
 }
 
 
-/* =========================
-   МАГАЗИН
-========================= */
+/* =========================================================
+   RENDER SHOP
+========================================================= */
 
 function renderShop() {
 
     const list =
-        document.getElementById(
-            "shopList"
-        );
+        document.getElementById("shopList");
 
-
-    list.innerHTML =
-        "";
+    list.innerHTML = "";
 
 
     upgrades.forEach(
-        function(
-            upgrade,
-            index
-        ) {
+        function(upgrade, index) {
+
+            // =========================================
+            // ЕСЛИ УЛУЧШЕНИЕ ЗАКРЫТО — НЕ ПОКАЗЫВАЕМ
+            // =========================================
+
+            if (!isUpgradeUnlocked(index)) {
+                return;
+            }
+
 
             const item =
-                document.createElement(
-                    "div"
-                );
-
+                document.createElement("div");
 
             item.className =
                 "shop-item";
 
 
+            // =========================================
+            // ЦЕНА
+            // =========================================
+
             const cost =
-                getUpgradeCost(
-                    upgrade
-                );
+                getUpgradeCost(upgrade);
 
 
             const canBuy =
-                game.balance >=
-                cost;
+                game.balance >= BigInt(cost);
 
 
-            item.innerHTML = `
+            // =========================================
+            // ОСНОВНАЯ ИНФОРМАЦИЯ
+            // =========================================
 
-                <div>
+            const content =
+                document.createElement("div");
 
-                    <div class="shop-name">
 
-                        ${upgrade.name}
+            content.innerHTML = `
+
+                <div class="shop-name">
+
+                    ${upgrade.name}
+
+                    <span>
+                        LVL ${upgrade.level}
+                    </span>
+
+                </div>
+
+
+                <div class="shop-description">
+
+                    +${formatNumber(upgrade.add)}
+                    ₽ за свайп
+
+                </div>
+
+            `;
+
+
+            item.appendChild(content);
+
+
+            // =========================================
+            // КНОПКА ПОКУПКИ
+            // =========================================
+
+            const button =
+                document.createElement("button");
+
+
+            button.className =
+                "shop-buy";
+
+
+            button.textContent =
+                formatNumber(cost) + " ₽";
+
+
+            button.disabled =
+                !canBuy;
+
+
+            button.addEventListener(
+                "click",
+                function(event) {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                    buyUpgrade(index);
+
+                }
+            );
+
+
+            item.appendChild(button);
+
+
+            // =========================================
+            // ДОБАВЛЯЕМ УЛУЧШЕНИЕ
+            // =========================================
+
+            list.appendChild(item);
+
+
+            // =========================================
+            // ПОКАЗЫВАЕМ ПРОГРЕСС ДО СЛЕДУЮЩЕГО
+            // =========================================
+
+            const nextUpgrade =
+                upgrades[index + 1];
+
+
+            if (nextUpgrade) {
+
+                const requiredLevel =
+                    nextUpgrade.unlockLevel;
+
+
+                const currentLevel =
+                    upgrade.level;
+
+
+                const remaining =
+                    Math.max(
+                        0,
+                        requiredLevel -
+                        currentLevel
+                    );
+
+
+                // -----------------------------------------
+                // ПРОГРЕСС
+                // -----------------------------------------
+
+                const progress =
+                    Math.min(
+                        100,
+                        (
+                            currentLevel /
+                            requiredLevel
+                        ) * 100
+                    );
+
+
+                const progressBox =
+                    document.createElement("div");
+
+
+                progressBox.className =
+                    "unlock-progress";
+
+
+                progressBox.innerHTML = `
+
+                    <div class="unlock-text">
+
+                        🔒 Следующее:
+
+                        <b>
+                            ${nextUpgrade.name}
+                        </b>
 
                         <span>
-                            LVL ${upgrade.level}
+                            ${currentLevel}/${requiredLevel} LVL
                         </span>
 
                     </div>
 
 
-                    <div class="shop-description">
+                    <div class="progress-bar">
 
-                        +${formatNumber(
-                            upgrade.add
-                        )} ₽ за свайп
+                        <div
+                            class="progress-fill"
+                            style="width: ${progress}%"
+                        ></div>
 
                     </div>
 
-                </div>
+
+                    <div class="unlock-need">
+
+                        Нужно ещё
+                        <b>${remaining}</b>
+                        уровней
+
+                    </div>
+
+                `;
 
 
-                <button
-                    class="shop-buy"
-                    ${canBuy ? "" : "disabled"}
-                >
+                list.appendChild(
+                    progressBox
+                );
 
-                    ${formatNumber(
-                        cost
-                    )} ₽
-
-                </button>
-
-            `;
-
-
-            item
-                .querySelector(
-                    "button"
-                )
-                .onclick =
-                function() {
-
-                    buyUpgrade(
-                        index
-                    );
-
-                };
-
-
-            list.appendChild(
-                item
-            );
+            }
 
         }
     );
 
 }
 
-
 /* =========================================================
    LEADERBOARD
-   ========================================================= */
+========================================================= */
 
 async function loadLeaderboard() {
+
 
     const list =
         document.getElementById(
@@ -1600,11 +2996,17 @@ async function loadLeaderboard() {
 
     if (!supabaseClient) {
 
+
         list.innerHTML = `
+
             <div class="empty">
+
                 Сначала подключи Supabase.
+
             </div>
+
         `;
+
 
         return;
 
@@ -1612,13 +3014,18 @@ async function loadLeaderboard() {
 
 
     list.innerHTML = `
+
         <div class="empty">
+
             Загрузка рейтинга...
+
         </div>
+
     `;
 
 
     try {
+
 
         const {
 
@@ -1626,17 +3033,14 @@ async function loadLeaderboard() {
 
             error
 
-        } = await supabaseClient
+        } =
+            await supabaseClient
 
-            .from("players")
+                .from("players")
 
-            .select(
-                "vk_id,name,balance,swipes"
-            );
-
-           
-
-       
+                .select(
+                    "vk_id,name,balance,swipes"
+                );
 
 
         if (error) {
@@ -1651,80 +3055,141 @@ async function loadLeaderboard() {
             data.length === 0
         ) {
 
+
             list.innerHTML = `
+
                 <div class="empty">
+
                     Пока игроков нет.
+
                 </div>
+
             `;
+
 
             return;
 
         }
-          data.sort(
-    (a, b) => {
 
-        const balanceA =
-            BigInt(a.balance || "0");
 
-        const balanceB =
-            BigInt(b.balance || "0");
+        data.sort(
 
-        if (balanceA > balanceB) return -1;
+            function(a, b) {
 
-        if (balanceA < balanceB) return 1;
 
-        return 0;
-    }
-);
+                const balanceA =
+                    BigInt(
+                        a.balance ||
+                        "0"
+                    );
+
+
+                const balanceB =
+                    BigInt(
+                        b.balance ||
+                        "0"
+                    );
+
+
+                if (
+                    balanceA >
+                    balanceB
+                ) {
+
+                    return -1;
+
+                }
+
+
+                if (
+                    balanceA <
+                    balanceB
+                ) {
+
+                    return 1;
+
+                }
+
+
+                return 0;
+
+            }
+
+        );
 
 
         list.innerHTML =
+
             data.map(
-                function(player, index) {
+
+                function(
+                    player,
+                    index
+                ) {
+
 
                     return `
 
                         <div class="leader">
 
-                            <div class="leader-place">
+
+                            <div
+                                class="leader-place">
+
                                 #${index + 1}
+
                             </div>
+
 
                             <div
                                 class="leader-name"
-                                onclick="openVKProfile('${player.vk_id}')"
-                            >
+                                onclick="openVKProfile('${player.vk_id}')">
+
                                 ${escapeHTML(
                                     player.name ||
                                     "Игрок"
                                 )}
+
                             </div>
 
-                            <div class="leader-balance">
+
+                            <div
+                                class="leader-balance">
+
                                 ${formatNumber(
                                     player.balance
-                                )} ₽
+                                )}
+                                ₽
+
                             </div>
+
 
                         </div>
 
                     `;
 
                 }
+
             ).join("");
 
 
     } catch (error) {
+
 
         console.error(
             "LEADERBOARD:",
             error
         );
 
+
         list.innerHTML = `
+
             <div class="empty">
+
                 Ошибка загрузки рейтинга.
+
             </div>
+
         `;
 
     }
@@ -1732,9 +3197,19 @@ async function loadLeaderboard() {
 }
 
 
+/* =========================================================
+   VK PROFILE
+========================================================= */
+
 function openVKProfile(vkId) {
 
-    if (!vkId) return;
+
+    if (!vkId) {
+
+        return;
+
+    }
+
 
     window.open(
         `https://vk.com/id${vkId}`,
@@ -1744,12 +3219,21 @@ function openVKProfile(vkId) {
 }
 
 
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
 function escapeHTML(text) {
 
+
     return String(text)
+
         .replace(
+
             /[&<>"']/g,
+
             function(character) {
+
 
                 return {
 
@@ -1770,13 +3254,17 @@ function escapeHTML(text) {
 
                 }[character];
 
+
             }
+
         );
 
 }
+
+
 /* =========================================================
    PANELS
-   ========================================================= */
+========================================================= */
 
 const panels =
     document.querySelectorAll(
@@ -1791,24 +3279,33 @@ const navButtons =
 
 
 navButtons.forEach(
+
     function(button) {
 
+
         button.addEventListener(
+
             "click",
+
             async function() {
+
 
                 const panel =
                     button.dataset.panel;
 
 
                 navButtons.forEach(
+
                     function(btn) {
+
 
                         btn.classList.remove(
                             "active"
                         );
 
+
                     }
+
                 );
 
 
@@ -1821,6 +3318,7 @@ navButtons.forEach(
                     panel === "shop"
                 ) {
 
+
                     document
                         .getElementById(
                             "shop"
@@ -1829,7 +3327,9 @@ navButtons.forEach(
                             "open"
                         );
 
+
                     renderShop();
+
 
                 }
 
@@ -1837,6 +3337,7 @@ navButtons.forEach(
                 if (
                     panel === "leaders"
                 ) {
+
 
                     document
                         .getElementById(
@@ -1846,48 +3347,65 @@ navButtons.forEach(
                             "open"
                         );
 
+
                     await loadLeaderboard();
 
                 }
 
+
             }
+
         );
 
     }
+
 );
 
 
-/* CLOSE */
+/* =========================================================
+   CLOSE PANELS
+========================================================= */
 
 document
     .querySelectorAll(
         ".close-button"
     )
     .forEach(
+
         function(button) {
+
 
             button.onclick =
                 function() {
 
+
                     panels.forEach(
+
                         function(panel) {
+
 
                             panel.classList.remove(
                                 "open"
                             );
 
+
                         }
+
                     );
 
 
                     navButtons.forEach(
+
                         function(btn) {
+
 
                             btn.classList.remove(
                                 "active"
                             );
 
+
                         }
+
                     );
 
 
@@ -1899,63 +3417,86 @@ document
                             "active"
                         );
 
+
                 };
 
         }
+
     );
 
 
 /* =========================================================
-   SAVE WHEN APP GOES BACKGROUND
-   ========================================================= */
+   SAVE ON BACKGROUND
+========================================================= */
 
 document.addEventListener(
+
     "visibilitychange",
+
     function() {
+
 
         if (
             document.visibilityState ===
             "hidden"
         ) {
 
+
             savePlayer();
+
 
         }
 
     }
+
 );
 
 
 window.addEventListener(
+
     "beforeunload",
+
     function() {
+
 
         savePlayer();
 
+
     }
+
 );
 
 
 /* =========================================================
-   START
-   ========================================================= */
+   START GAME
+========================================================= */
 
 async function startGame() {
 
+
     render();
+
 
     await initVK();
 
+
     await loadPlayer();
 
+
     render();
+
+
+    renderShop();
+
 
 }
 
 
 startGame();
 
+
 </script>
 
 </body>
+
 </html>
