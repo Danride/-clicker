@@ -513,11 +513,17 @@ if (
 
 /* =========================================================
    PLAYER (СИНХРОНИЗАЦИЯ ID)
+   [ПРАВКА 1]: Генерируем guest ID один раз и сохраняем его, чтобы он не менялся при перезагрузке
 ========================================================= */
-const savedVkId = localStorage.getItem("sync_vk_id");
+let savedVkId = localStorage.getItem("sync_vk_id");
+
+if (!savedVkId) {
+    savedVkId = "guest_" + Math.random().toString(36).substring(2);
+    localStorage.setItem("sync_vk_id", savedVkId);
+}
 
 let player = {
-    id: savedVkId || ("guest_" + Math.random().toString(36).substring(2)),
+    id: savedVkId,
     name: "Игрок"
 };
 
@@ -606,7 +612,7 @@ async function initVK() {
         console.log("VK Bridge:", error);
         
         // Если мы в обычном браузере (ПК), спрашиваем ID для синхронизации
-        if (!savedVkId) {
+        if (!savedVkId || savedVkId.startsWith("guest_")) {
             const inputId = prompt("Введите ваш VK ID (только цифры), чтобы синхронизировать прогресс с телефоном:\n(Если не знаете ID, откройте свой профиль VK, цифры в адресной строке после id)");
             if (inputId && /^\d+$/.test(inputId.trim())) {
                 player.id = inputId.trim();
@@ -939,6 +945,7 @@ function renderShop() {
 
 /* =========================================================
    LEADERBOARD
+   [ПРАВКА 2]: Сортировка и лимит на стороне сервера для мгновенной загрузки
 ========================================================= */
 async function loadLeaderboard() {
     const list = document.getElementById("leadersList");
@@ -950,21 +957,15 @@ async function loadLeaderboard() {
     try {
         const { data, error } = await supabaseClient
             .from("players")
-            .select("vk_id,name,balance,swipes");
+            .select("vk_id,name,balance,swipes")
+            .order("balance", { ascending: false })
+            .limit(100);
 
         if (error) throw error;
         if (!data || data.length === 0) {
             list.innerHTML = `<div class="empty">Пока игроков нет.</div>`;
             return;
         }
-
-        data.sort(function(a, b) {
-            const balanceA = BigInt(a.balance || "0");
-            const balanceB = BigInt(b.balance || "0");
-            if (balanceA > balanceB) return -1;
-            if (balanceA < balanceB) return 1;
-            return 0;
-        });
 
         list.innerHTML = data.map(function(player, index) {
             return `
