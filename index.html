@@ -963,12 +963,12 @@ async function loadLeaderboard() {
         return;
     }
     list.innerHTML = `<div class="empty">Загрузка рейтинга...</div>`;
+    
     try {
-        // Мы убрали .order("balance", { ascending: false }), 
-        // так как сортировка строкового поля в БД работает некорректно для чисел.
+        // Забираем данные без сортировки от БД, чтобы избежать ошибки текстовой сортировки
         const { data, error } = await supabaseClient
             .from("players")
-            .select("vk_id,name,balance,swipes")
+            .select("vk_id, name, balance, swipes")
             .limit(100);
 
         if (error) throw error;
@@ -977,13 +977,18 @@ async function loadLeaderboard() {
             return;
         }
 
-        // Сортируем массив на стороне клиента численно (от большего к меньшему)
+        // СОРТИРОВКА СТРОГО ПО ЧИСЛУ ДЕНЕГ (от большего к меньшему)
         data.sort((a, b) => {
-            const balanceA = BigInt(a.balance || "0");
-            const balanceB = BigInt(b.balance || "0");
-            if (balanceA > balanceB) return -1;
-            if (balanceA < balanceB) return 1;
-            return 0;
+            const moneyA = BigInt(a.balance || "0");
+            const moneyB = BigInt(b.balance || "0");
+            
+            if (moneyA > moneyB) return -1; // У кого денег больше, тот выше (идет первым)
+            if (moneyA < moneyB) return 1;  // У кого денег меньше, тот ниже
+            
+            // Если денег абсолютно поровну, выше тот, кто сделал больше свайпов
+            const swipesA = Number(a.swipes || 0);
+            const swipesB = Number(b.swipes || 0);
+            return swipesB - swipesA;
         });
 
         list.innerHTML = data.map(function(player, index) {
@@ -995,6 +1000,7 @@ async function loadLeaderboard() {
                 </div>
             `;
         }).join("");
+        
     } catch (error) {
         console.error("LEADERBOARD:", error);
         list.innerHTML = `<div class="empty">Ошибка загрузки рейтинга.</div>`;
