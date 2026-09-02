@@ -513,7 +513,6 @@ if (
 
 /* =========================================================
    PLAYER (СИНХРОНИЗАЦИЯ ID)
-   [ПРАВКА 1]: Генерируем guest ID один раз и сохраняем его, чтобы он не менялся при перезагрузке
 ========================================================= */
 let savedVkId = localStorage.getItem("sync_vk_id");
 
@@ -533,7 +532,8 @@ let player = {
 let game = {
     balance: 0n,
     power: 1,
-    swipes: 0
+    swipes: 0,
+    lastSyncedAt: 0 // [ПРАВКА] Добавлено для отслеживания актуальности данных
 };
 
 /* =========================================================
@@ -603,7 +603,6 @@ async function initVK() {
         if (user && user.id) {
             player.id = String(user.id);
             player.name = (user.first_name + " " + user.last_name).trim();
-            // Сохраняем ID и для ПК, если вдруг перезагрузят
             localStorage.setItem("sync_vk_id", player.id);
         }
         connection.textContent = "VK CONNECTED";
@@ -611,7 +610,6 @@ async function initVK() {
     } catch (error) {
         console.log("VK Bridge:", error);
         
-        // Если мы в обычном браузере (ПК), спрашиваем ID для синхронизации
         if (!savedVkId || savedVkId.startsWith("guest_")) {
             const inputId = prompt("Введите ваш VK ID (только цифры), чтобы синхронизировать прогресс с телефоном:\n(Если не знаете ID, откройте свой профиль VK, цифры в адресной строке после id)");
             if (inputId && /^\d+$/.test(inputId.trim())) {
@@ -640,7 +638,7 @@ async function loadPlayer() {
     try {
         const { data, error } = await supabaseClient
             .from("players")
-            .select("balance,power,swipes,name,upgrades")
+            .select("balance,power,swipes,name,upgrades,updated_at")
             .eq("vk_id", player.id)
             .maybeSingle();
 
@@ -650,6 +648,8 @@ async function loadPlayer() {
             game.balance = BigInt(data.balance || "0");
             game.power = Number(data.power) || 1;
             game.swipes = Number(data.swipes) || 0;
+            game.lastSyncedAt = data.updated_at ? new Date(data.updated_at).getTime() : Date.now(); // [ПРАВКА] Запоминаем время последней записи
+            
             if (Array.isArray(data.upgrades)) {
                 data.upgrades.forEach(function(level, index) {
                     if (upgrades[index]) {
@@ -698,6 +698,8 @@ async function savePlayer() {
             .upsert(data, { onConflict: "vk_id" });
 
         if (error) throw error;
+        
+        game.lastSyncedAt = Date.now(); // [ПРАВКА] Фиксируем время успешного сохранения
         console.log("GAME SAVED");
     } catch (error) {
         console.error("Supabase SAVE:", error);
@@ -721,7 +723,7 @@ function startRealtimeSync() {
         .on(
             'postgres_changes',
             {
-                event: '*', // Слушаем и INSERT, и UPDATE
+                event: '*',
                 schema: 'public',
                 table: 'players',
                 filter: `vk_id=eq.${player.id}`
@@ -732,14 +734,20 @@ function startRealtimeSync() {
                 const serverBalance = BigInt(newData.balance || "0");
                 const serverSwipes = Number(newData.swipes) || 0;
                 const serverPower = Number(newData.power) || 1;
+                const serverUpdatedAt = newData.updated_at ? new Date(newData.updated_at).getTime() : 0; // [ПРАВКА] Получаем время обновления с сервера
 
-                // Обновляем локальные данные ТОЛЬКО если сервер "обогнал" нас.
-                // Это предотвращает сброс ваших быстрых кликов на ПК, если телефон 
-                // отправил сохранение на долю секунды позже.
-                if (serverBalance > game.balance || serverSwipes > game.swipes) {
+                // Если данные идентичны, ничего не делаем
+                if (serverBalance === game.balance && serverSwipes === game.swipes && serverPower === game.power) {
+                    return;
+                }
+
+                // [ПРАВКА] Обновляем, если запись на сервере новее нашей последней синхронизации 
+                // (допуск 1000 мс компенсирует небольшие задержки сети между устройствами)
+                if (serverUpdatedAt > game.lastSyncedAt - 1000) {
                     game.balance = serverBalance;
                     game.power = serverPower;
                     game.swipes = serverSwipes;
+                    game.lastSyncedAt = serverUpdatedAt;
 
                     if (Array.isArray(newData.upgrades)) {
                         newData.upgrades.forEach((level, index) => {
@@ -752,6 +760,8 @@ function startRealtimeSync() {
                     console.log("🔄 Прогресс обновлен с другого устройства!");
                     render();
                     renderShop();
+                } else {
+                    console.log("⏭️ Игнорируем устаревшее обновление с сервера");
                 }
             }
         )
@@ -945,7 +955,6 @@ function renderShop() {
 
 /* =========================================================
    LEADERBOARD
-   [ПРАВКА 2]: Сортировка и лимит на стороне сервера для мгновенной загрузки
 ========================================================= */
 async function loadLeaderboard() {
     const list = document.getElementById("leadersList");
@@ -1054,7 +1063,6 @@ async function startGame() {
     await initVK();
     await loadPlayer();
     
-    // Запускаем прослушивание изменений в реальном времени
     startRealtimeSync(); 
     
     render();
