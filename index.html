@@ -964,10 +964,11 @@ async function loadLeaderboard() {
     }
     list.innerHTML = `<div class="empty">Загрузка рейтинга...</div>`;
     try {
+        // Мы убрали .order("balance", { ascending: false }), 
+        // так как сортировка строкового поля в БД работает некорректно для чисел.
         const { data, error } = await supabaseClient
             .from("players")
             .select("vk_id,name,balance,swipes")
-            .order("balance", { ascending: false })
             .limit(100);
 
         if (error) throw error;
@@ -975,6 +976,15 @@ async function loadLeaderboard() {
             list.innerHTML = `<div class="empty">Пока игроков нет.</div>`;
             return;
         }
+
+        // Сортируем массив на стороне клиента численно (от большего к меньшему)
+        data.sort((a, b) => {
+            const balanceA = BigInt(a.balance || "0");
+            const balanceB = BigInt(b.balance || "0");
+            if (balanceA > balanceB) return -1;
+            if (balanceA < balanceB) return 1;
+            return 0;
+        });
 
         list.innerHTML = data.map(function(player, index) {
             return `
@@ -990,7 +1000,6 @@ async function loadLeaderboard() {
         list.innerHTML = `<div class="empty">Ошибка загрузки рейтинга.</div>`;
     }
 }
-
 /* =========================================================
    VK PROFILE
 ========================================================= */
