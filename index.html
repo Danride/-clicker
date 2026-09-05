@@ -82,7 +82,7 @@ header {
 }
 
 .connection.online {
-    color: #4ade80; /* Зеленый для наглядности синхронизации */
+    color: #4ade80;
 }
 
 /* =========================================================
@@ -533,7 +533,7 @@ let game = {
     balance: 0n,
     power: 1,
     swipes: 0,
-    lastSyncedAt: 0 // [ПРАВКА] Добавлено для отслеживания актуальности данных
+    lastSyncedAt: 0
 };
 
 /* =========================================================
@@ -628,6 +628,21 @@ async function initVK() {
 }
 
 /* =========================================================
+   RECALCULATE POWER (НОВЫЙ ИСТОЧНИК ИСТИНЫ)
+========================================================= */
+function recalculatePower() {
+    let tempPower = 1;
+    upgrades.forEach(u => {
+        for (let lvl = 1; lvl <= u.level; lvl++) {
+            const currentTier = Math.floor((lvl - 1) / 100);
+            const bonusMult = Math.pow(1.15, currentTier);
+            tempPower += Math.floor(u.add * bonusMult);
+        }
+    });
+    return tempPower;
+}
+
+/* =========================================================
    LOAD PLAYER
 ========================================================= */
 async function loadPlayer() {
@@ -646,9 +661,8 @@ async function loadPlayer() {
 
         if (data) {
             game.balance = BigInt(data.balance || "0");
-            game.power = Number(data.power) || 1;
             game.swipes = Number(data.swipes) || 0;
-            game.lastSyncedAt = data.updated_at ? new Date(data.updated_at).getTime() : Date.now(); // [ПРАВКА] Запоминаем время последней записи
+            game.lastSyncedAt = data.updated_at ? new Date(data.updated_at).getTime() : Date.now();
             
             if (Array.isArray(data.upgrades)) {
                 data.upgrades.forEach(function(level, index) {
@@ -656,6 +670,17 @@ async function loadPlayer() {
                         upgrades[index].level = Number(level) || 0;
                     }
                 });
+            }
+
+            // ПЕРЕСЧИТЫВАЕМ СИЛУ НА ОСНОВЕ УРОВНЕЙ (фикс сброса прогресса)
+            const calculatedPower = recalculatePower();
+            const dbPower = Number(data.power) || 1;
+            
+            // Берем максимальное значение — на случай, если в базе что-то странное
+            game.power = Math.max(calculatedPower, dbPower);
+            
+            if (calculatedPower > dbPower) {
+                console.log("⚠️ Power восстановлен из апгрейдов:", game.power, "(было в БД:", dbPower, ")");
             }
         }
         connection.textContent = "ONLINE";
@@ -699,7 +724,7 @@ async function savePlayer() {
 
         if (error) throw error;
         
-        game.lastSyncedAt = Date.now(); // [ПРАВКА] Фиксируем время успешного сохранения
+        game.lastSyncedAt = Date.now();
         console.log("GAME SAVED");
     } catch (error) {
         console.error("Supabase SAVE:", error);
@@ -733,19 +758,14 @@ function startRealtimeSync() {
                 
                 const serverBalance = BigInt(newData.balance || "0");
                 const serverSwipes = Number(newData.swipes) || 0;
-                const serverPower = Number(newData.power) || 1;
-                const serverUpdatedAt = newData.updated_at ? new Date(newData.updated_at).getTime() : 0; // [ПРАВКА] Получаем время обновления с сервера
+                const serverUpdatedAt = newData.updated_at ? new Date(newData.updated_at).getTime() : 0;
 
-                // Если данные идентичны, ничего не делаем
-                if (serverBalance === game.balance && serverSwipes === game.swipes && serverPower === game.power) {
+                if (serverBalance === game.balance && serverSwipes === game.swipes) {
                     return;
                 }
 
-                // [ПРАВКА] Обновляем, если запись на сервере новее нашей последней синхронизации 
-                // (допуск 1000 мс компенсирует небольшие задержки сети между устройствами)
                 if (serverUpdatedAt > game.lastSyncedAt - 1000) {
                     game.balance = serverBalance;
-                    game.power = serverPower;
                     game.swipes = serverSwipes;
                     game.lastSyncedAt = serverUpdatedAt;
 
@@ -757,7 +777,10 @@ function startRealtimeSync() {
                         });
                     }
 
-                    console.log("🔄 Прогресс обновлен с другого устройства!");
+                    // ПЕРЕСЧИТЫВАЕМ СИЛУ НА ОСНОВЕ УРОВНЕЙ (фикс сброса прогресса)
+                    game.power = recalculatePower();
+
+                    console.log("🔄 Прогресс обновлен с другого устройства! Power:", game.power);
                     render();
                     renderShop();
                 } else {
@@ -766,7 +789,7 @@ function startRealtimeSync() {
             }
         )
         .subscribe((status) => {
-            if (status === 'SUBSCRIBED') {
+            if (status === 'SUBSCRIBIBED') {
                 console.log("✅ Realtime синхронизация активна");
             }
         });
@@ -965,7 +988,6 @@ async function loadLeaderboard() {
     list.innerHTML = `<div class="empty">Загрузка рейтинга...</div>`;
     
     try {
-        // Забираем данные без сортировки от БД, чтобы избежать ошибки текстовой сортировки
         const { data, error } = await supabaseClient
             .from("players")
             .select("vk_id, name, balance, swipes")
@@ -977,15 +999,13 @@ async function loadLeaderboard() {
             return;
         }
 
-        // СОРТИРОВКА СТРОГО ПО ЧИСЛУ ДЕНЕГ (от большего к меньшему)
         data.sort((a, b) => {
             const moneyA = BigInt(a.balance || "0");
             const moneyB = BigInt(b.balance || "0");
             
-            if (moneyA > moneyB) return -1; // У кого денег больше, тот выше (идет первым)
-            if (moneyA < moneyB) return 1;  // У кого денег меньше, тот ниже
+            if (moneyA > moneyB) return -1;
+            if (moneyA < moneyB) return 1;
             
-            // Если денег абсолютно поровну, выше тот, кто сделал больше свайпов
             const swipesA = Number(a.swipes || 0);
             const swipesB = Number(b.swipes || 0);
             return swipesB - swipesA;
@@ -1006,6 +1026,7 @@ async function loadLeaderboard() {
         list.innerHTML = `<div class="empty">Ошибка загрузки рейтинга.</div>`;
     }
 }
+
 /* =========================================================
    VK PROFILE
 ========================================================= */
